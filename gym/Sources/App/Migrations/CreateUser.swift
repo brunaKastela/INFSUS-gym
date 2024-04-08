@@ -4,20 +4,22 @@ import Vapor
 
 struct CreateUser: Migration {
 
-    func prepare(on database: FluentKit.Database) -> NIOCore.EventLoopFuture<Void> {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema("users")
             .id()
-            .field("name", .string)
-            .field("surname", .string)
-            .field("email", .string)
-            .field("phone_number", .string)
-            .field("user_type", .string)
+            .field("name", .string, .required)
+            .field("surname", .string, .required)
+            .field("email", .string, .required)
+            .field("phone_number", .string, .required)
+            .field("date_of_birth", .datetime, .required)
+            .field("user_type_id", .uuid, .required, .references("user_types", "id", onDelete: .cascade))
             .create()
     }
-    
-    func revert(on database: FluentKit.Database) -> NIOCore.EventLoopFuture<Void> {
+
+    func revert(on database: Database) -> EventLoopFuture<Void> {
         database.schema("users")
             .delete()
     }
 
 }
+

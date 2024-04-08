@@ -16,26 +16,26 @@ struct APIController: RouteCollection {
 
 extension APIController {
 
-    func members(req: Request) throws -> EventLoopFuture<[Member]> {
-        Member.query(on: req.db).all()
+    func members(req: Request) throws -> EventLoopFuture<[User]> {
+        User.query(on: req.db).all()
     }
 
-    func addMember(req: Request) throws -> EventLoopFuture<Member> {
-        let member = try req.content.decode(Member.self)
+    func addMember(req: Request) throws -> EventLoopFuture<User> {
+        let member = try req.content.decode(User.self)
 
         return member.create(on: req.db).map { member }
     }
 
-    func member(req: Request) throws -> EventLoopFuture<Member> {
-        Member
+    func member(req: Request) throws -> EventLoopFuture<User> {
+        User
             .find(req.parameters.get("memberId"), on: req.db)
             .unwrap(or: Abort(.notFound))
     }
 
     func updateMember(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        let member = try req.content.decode(Member.self)
+        let member = try req.content.decode(User.self)
 
-        return Member
+        return User
             .find(member.id, on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap {
@@ -44,7 +44,7 @@ extension APIController {
     }
 
     func deleteMember(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        Member
+        User
             .find(req.parameters.get("memberId"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap {

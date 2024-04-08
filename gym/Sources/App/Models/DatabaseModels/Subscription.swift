@@ -10,7 +10,7 @@ final class Subscription: Model, Content {
     var id: UUID?
 
     @Parent(key: "member_id")
-    var member: Member
+    var member: User
 
     @Parent(key: "membership_id")
     var membership: Membership
@@ -21,20 +21,18 @@ final class Subscription: Model, Content {
     @Field(key: "valid_until")
     var validUntil: Date
 
-    @Field(key: "subscription_type")
+    @Parent(key: "subscription_type_id")
     var subscriptionType: SubscriptionType
 
     init() {}
 
     init(
-        id: UUID? = nil,
         memberId: UUID,
         membershipId: UUID,
         validFrom: Date,
         validUntil: Date,
         subscriptionType: SubscriptionType
     ) {
-        self.id = id
         self.$member.id = memberId
         self.$membership.id = membershipId
         self.validFrom = validFrom

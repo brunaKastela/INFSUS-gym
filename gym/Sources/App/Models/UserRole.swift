@@ -1,6 +1,6 @@
 import Foundation
 
-enum UserType: String, Codable {
+enum UserRole: String, Codable {
 
     case member = "member"
     case admin = "admin"

@@ -21,24 +21,33 @@ final class User: Model, Content {
     @Field(key: "phone_number")
     var phoneNumber: String
 
-    @Enum(key: "userType")
+    @Field(key: "date_of_birth")
+    var dateOfBirth: Date
+
+    @Parent(key: "user_type_id")
     var userType: UserType
+
+    @Children(for: \Subscription.$member)
+    var subscriptions: [Subscription]
+
+    @Siblings(through: Reservation.self, from: \.$user, to: \.$timeslot)
+    var timeslots: [Timeslot]
 
     init() {}
 
     init(
-        id: UUID? = nil,
         name: String,
         surname: String, 
         email: String,
         phoneNumber: String,
-        userType: UserType
+        userTypeId: UUID,
+        dateOfBirth: Date
     ) {
-        self.id = id
         self.name = name
         self.surname = surname
         self.email = email
         self.phoneNumber = phoneNumber
-        self.userType = userType
+        self.$userType.id = userTypeId
+        self.dateOfBirth = dateOfBirth
     }
 }
