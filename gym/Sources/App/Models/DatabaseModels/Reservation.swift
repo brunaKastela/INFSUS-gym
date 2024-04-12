@@ -12,16 +12,16 @@ final class Reservation: Model, Content {
     @Parent(key: "user_id")
     var user: User
 
-    @Parent(key: "timeslot_id")
-    var timeslot: Timeslot
+    @Parent(key: "timeslot_location_id")
+    var timeslotLocation: TimeslotLocation
 
     init() { }
 
     init(
         userID: UUID,
-        timeslotID: UUID
+        timeslotLocationID: UUID
     ) {
         self.$user.id = userID
-        self.$timeslot.id = timeslotID
+        self.$timeslotLocation.id = timeslotLocationID
     }
 }

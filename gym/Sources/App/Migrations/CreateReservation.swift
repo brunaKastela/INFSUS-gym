@@ -9,7 +9,7 @@ struct CreateReservation: Migration {
         database.schema("reservations")
             .id()
             .field("user_id", .uuid, .required, .references("users", "id", onDelete: .cascade))
-            .field("timeslot_id", .uuid, .required, .references("timeslots", "id", onDelete: .cascade))
+            .field("timeslot_location_id", .uuid, .required, .references("timeslot_location", "id", onDelete: .cascade))
             .create()
     }
 

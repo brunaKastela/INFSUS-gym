@@ -30,9 +30,6 @@ final class User: Model, Content {
     @Children(for: \Subscription.$member)
     var subscriptions: [Subscription]
 
-    @Siblings(through: Reservation.self, from: \.$user, to: \.$timeslot)
-    var timeslots: [Timeslot]
-
     init() {}
 
     init(

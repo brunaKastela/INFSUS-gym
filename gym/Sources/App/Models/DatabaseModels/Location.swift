@@ -24,7 +24,7 @@ final class Location: Model, Content {
     @Field(key: "email")
     var email: String
 
-    @Siblings(through: TimeslotLocationCapacity.self, from: \.$location, to: \.$timeslot)
+    @Siblings(through: TimeslotLocation.self, from: \.$location, to: \.$timeslot)
     var timeslots: [Timeslot]
 
     init () {}

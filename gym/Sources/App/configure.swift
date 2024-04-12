@@ -25,8 +25,8 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateSubscription())
     app.migrations.add(CreateLocation())
     app.migrations.add(CreateTimeslot())
+    app.migrations.add(CreateTimeslotLocation())
     app.migrations.add(CreateReservation())
-    app.migrations.add(CreateTimeslotLocationCapacity())
 
     app.views.use(.leaf)
 

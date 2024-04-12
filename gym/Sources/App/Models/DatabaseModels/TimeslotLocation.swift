@@ -2,9 +2,9 @@ import Foundation
 import Fluent
 import Vapor
 
-final class TimeslotLocationCapacity: Model, Content {
+final class TimeslotLocation: Model, Content {
 
-    static var schema = "timeslot_location_capacity"
+    static var schema = "timeslot_location"
 
     @ID(key: .id)
     var id: UUID?

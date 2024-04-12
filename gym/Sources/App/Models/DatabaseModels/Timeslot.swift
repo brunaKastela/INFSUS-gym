@@ -15,11 +15,8 @@ final class Timeslot: Model, Content {
     @Field(key: "end_time")
     var endTime: Date
 
-    @Siblings(through: Reservation.self, from: \.$timeslot, to: \.$user)
-    var users: [User]
-
-    @Siblings(through: TimeslotLocationCapacity.self, from: \.$timeslot, to: \.$location)
-    var locations: [Location]
+    @Children(for: \.$timeslot)
+    var locations: [TimeslotLocation]
 
     init() {}
 
