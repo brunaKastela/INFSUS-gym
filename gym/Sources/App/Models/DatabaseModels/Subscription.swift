@@ -31,12 +31,12 @@ final class Subscription: Model, Content {
         membershipId: UUID,
         validFrom: Date,
         validUntil: Date,
-        subscriptionType: SubscriptionType
+        subscriptionTypeId: UUID
     ) {
         self.$member.id = memberId
         self.$membership.id = membershipId
         self.validFrom = validFrom
         self.validUntil = validUntil
-        self.subscriptionType = subscriptionType
+        self.$subscriptionType.id = subscriptionTypeId
     }
 }

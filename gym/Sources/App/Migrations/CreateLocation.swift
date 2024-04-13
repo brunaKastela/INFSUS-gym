@@ -12,6 +12,8 @@ final class CreateLocation: Migration {
             .field("capacity", .int, .required)
             .field("phone_number", .string, .required)
             .field("email", .string, .required)
+            .field("opening", .int, .required)
+            .field("closing", .int, .required)
             .create()
     }
 

@@ -1,8 +1,9 @@
 import Foundation
 import Fluent
 import Vapor
+import Crypto
 
-final class User: Model, Content {
+final class User: Model, Content, Authenticatable {
 
     static var schema = "users"
 

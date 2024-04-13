@@ -30,5 +30,7 @@ public func configure(_ app: Application) async throws {
 
     app.views.use(.leaf)
 
+    DatabaseSetup().setUpDatabase(using: app.db)
+
     try routes(app)
 }

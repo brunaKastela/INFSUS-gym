@@ -24,6 +24,12 @@ final class Location: Model, Content {
     @Field(key: "email")
     var email: String
 
+    @Field(key: "opening")
+    var opening: Int
+
+    @Field(key: "closing")
+    var closing: Int
+
     @Siblings(through: TimeslotLocation.self, from: \.$location, to: \.$timeslot)
     var timeslots: [Timeslot]
 
@@ -34,12 +40,16 @@ final class Location: Model, Content {
         description: String,
         capacity: Int,
         phoneNumber: String,
-        email: String
+        email: String,
+        opening: Int,
+        closing: Int
     ) {
         self.address = address
         self.description = description
         self.capacity = capacity
         self.phoneNumber = phoneNumber
         self.email = email
+        self.opening = opening
+        self.closing = closing
     }
 }

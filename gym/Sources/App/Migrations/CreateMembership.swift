@@ -9,9 +9,9 @@ final class CreateMembership: Migration {
             .id()
             .field("title", .string)
             .field("description", .string)
-            .field("weeklyPrice", .float)
-            .field("monthlyPrice", .float)
-            .field("yearlyPrice", .float)
+            .field("weekly_price", .float)
+            .field("monthly_price", .float)
+            .field("yearly_price", .float)
             .create()
     }
 

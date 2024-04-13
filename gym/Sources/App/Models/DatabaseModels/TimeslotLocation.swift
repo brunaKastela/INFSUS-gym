@@ -24,7 +24,8 @@ final class TimeslotLocation: Model, Content {
         timeslotId: UUID,
         locationId: UUID
     ) {
-        self.timeslot.id = timeslotId
-        self.location.id = locationId
+        self.$timeslot.id = timeslotId
+        self.$location.id = locationId
+        self.currentCapacity = 0
     }
 }
