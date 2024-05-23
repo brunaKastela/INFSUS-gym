@@ -137,33 +137,38 @@ extension DatabaseSetup {
             let sampleSurnames = ["Lovric", "Saric", "Johnson", "Vekic", "Modric", "Mandzukic", "Olic", "Rakitic", "Perisic", "Vida", "Brozovic"]
             let samplePhoneNumbers = ["0996571382", "0996543382", "0996578393","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382"]
 
-            for i in 0..<count {
-                let userTypeId = userTypeIds[i % 2 + 1]
+            do {
+                for i in 0..<count {
+                    let userTypeId = userTypeIds[i % 2 + 1]
 
-                let user = User(
-                    name: sampleNames.randomElement() ?? "Unknown",
-                    surname: sampleSurnames.randomElement() ?? "Unknown",
+                    let user = try User(
+                        name: sampleNames.randomElement() ?? "Unknown",
+                        surname: sampleSurnames.randomElement() ?? "Unknown",
+                        email: "mojmail@gmail.com",
+                        phoneNumber: samplePhoneNumbers.randomElement() ?? "Unknown",
+                        userTypeId: userTypeId,
+                        dateOfBirth: Date(),
+                        password: "12345678"
+                    )
+                    let userCreationFuture = user.create(on: database)
+                    userCreationFutures.append(userCreationFuture)
+                }
+                let user = try User(
+                    name: "Bossman",
+                    surname: "Bosic",
                     email: "mojmail@gmail.com",
                     phoneNumber: samplePhoneNumbers.randomElement() ?? "Unknown",
-                    userTypeId: userTypeId,
-                    dateOfBirth: Date()
+                    userTypeId: userTypeIds[0],
+                    dateOfBirth: Date(),
+                    password: "12345678"
                 )
                 let userCreationFuture = user.create(on: database)
                 userCreationFutures.append(userCreationFuture)
+                self.createRandomReservations(using: database)
+                self.createRandomSubscriptions(using: database)
+            } catch {
+                print("Error creating user: \(error)")
             }
-            let user = User(
-                name: "Bossman",
-                surname: "Bosic",
-                email: "mojmail@gmail.com",
-                phoneNumber: samplePhoneNumbers.randomElement() ?? "Unknown",
-                userTypeId: userTypeIds[0],
-                dateOfBirth: Date()
-            )
-            let userCreationFuture = user.create(on: database)
-            userCreationFutures.append(userCreationFuture)
-            self.createRandomReservations(using: database)
-            self.createRandomSubscriptions(using: database)
-
         }
     }
 
@@ -299,8 +304,15 @@ extension DatabaseSetup {
 
     func fillUserTypes() {
         let sampleTitles = ["admin", "employee", "member"]
-        for title in sampleTitles {
-            let userType = UserType(title: title)
+        let sampleIds: [UUID] = [
+            UUID(uuidString: "5A60DA33-BBCD-4F0F-B95B-D445F29D9EC7")!,
+            UUID(uuidString: "26519AEA-35B9-49A3-8E56-FCBB370E617D")!,
+            UUID(uuidString: "71BEAC26-4426-4620-9F74-DA6DCA89D792")!
+        ]
+        for (i, title) in sampleTitles.enumerated() {
+            let userType = UserType(
+                id: sampleIds[i],
+                title: title)
             userTypes.append(userType)
         }
     }

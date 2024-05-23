@@ -16,6 +16,9 @@ final class User: Model, Content, Authenticatable {
     @Field(key: "surname")
     var surname: String
 
+    @Field(key: "password_hash")
+    var passwordHash: String
+
     @Field(key: "email")
     var email: String
 
@@ -31,6 +34,10 @@ final class User: Model, Content, Authenticatable {
     @Children(for: \Subscription.$member)
     var subscriptions: [Subscription]
 
+    enum InitError: Error {
+        case passwordHashingFailed
+    }
+
     init() {}
 
     init(
@@ -39,13 +46,20 @@ final class User: Model, Content, Authenticatable {
         email: String,
         phoneNumber: String,
         userTypeId: UUID,
-        dateOfBirth: Date
-    ) {
+        dateOfBirth: Date,
+        password: String
+    ) throws {
         self.name = name
         self.surname = surname
         self.email = email
         self.phoneNumber = phoneNumber
         self.$userType.id = userTypeId
         self.dateOfBirth = dateOfBirth
+
+        guard let hashedPassword = try? Bcrypt.hash(password) else {
+            throw InitError.passwordHashingFailed
+        }
+
+        self.passwordHash = hashedPassword
     }
 }

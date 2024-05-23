@@ -27,6 +27,9 @@ public func configure(_ app: Application) async throws {
 
     app.views.use(.leaf)
 
+    try await app.autoRevert()
+    try await app.autoMigrate()
+
     DatabaseSetup().setUpDatabase(using: app.db)
 
     try routes(app)
