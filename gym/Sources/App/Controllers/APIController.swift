@@ -33,13 +33,31 @@ extension APIController {
     }
 
     func updateMember(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        let member = try req.content.decode(User.self)
+        let updateUserDTO = try req.content.decode(UpdateUserDTO.self)
 
-        return User
-            .find(member.id, on: req.db)
+        return User.find(updateUserDTO.id, on: req.db)
             .unwrap(or: Abort(.notFound))
-            .flatMap {
-                return $0.update(on: req.db).transform(to: .ok)
+            .flatMap { existingUser in
+                if let name = updateUserDTO.name {
+                    existingUser.name = name
+                }
+                if let surname = updateUserDTO.surname {
+                    existingUser.surname = surname
+                }
+                if let email = updateUserDTO.email {
+                    existingUser.email = email
+                }
+                if let phoneNumber = updateUserDTO.phoneNumber {
+                    existingUser.phoneNumber = phoneNumber
+                }
+                if let dateOfBirth = updateUserDTO.dateOfBirth {
+                    existingUser.dateOfBirth = dateOfBirth
+                }
+                if let userTypeId = updateUserDTO.userTypeId {
+                    existingUser.$userType.id = userTypeId
+                }
+
+                return existingUser.update(on: req.db).transform(to: .ok)
             }
     }
 

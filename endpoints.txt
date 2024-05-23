@@ -1,0 +1,48 @@
+ENDPOINTS
+
+1. Members
+    - GET http://127.0.0.1:8080/gym/admin/members
+    - ODGOVOR [{
+        "phoneNumber": String,
+        "userType": {
+            "id": String
+        },
+        "email": String,
+        "id": String,
+        "surname": String,
+        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
+        "name": String
+    }]
+
+    - GET http://127.0.0.1:8080/gym/admin/members/:id # "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
+    - ODGOVOR {
+        "phoneNumber": String,
+        "userType": {
+            "id": String
+        },
+        "email": String,
+        "id": String,
+        "surname": String,
+        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
+        "name": String
+    }
+
+    - POST http://127.0.0.1:8080/gym/admin/members
+    - POSLATI {
+        "name": String,
+        "surname": String,
+        "phoneNumber": String,
+        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
+        "email": String,
+        "userType": {
+            "id": String, # "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
+        }
+    }
+
+    -PUT http://127.0.0.1:8080/gym/admin/members/:id
+    - POSLATI {
+        "id": "1F926AD4-5A14-41C4-9ED9-6F4A537044D3" + atributi koji se mijenjaju
+    }
+
+    -DELETE http://127.0.0.1:8080/gym/admin/members/:id
+    - ODGOVOR 200 OK ili not found

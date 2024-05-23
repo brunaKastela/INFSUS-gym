@@ -11,22 +11,22 @@ final class User: Model, Content, Authenticatable {
     var id: UUID?
 
     @Field(key: "name")
-    var name: String
+    var name: String?
 
     @Field(key: "surname")
-    var surname: String
+    var surname: String?
 
     @Field(key: "password_hash")
-    var passwordHash: String
+    var passwordHash: String?
 
     @Field(key: "email")
-    var email: String
+    var email: String?
 
     @Field(key: "phone_number")
-    var phoneNumber: String
+    var phoneNumber: String?
 
     @Field(key: "date_of_birth")
-    var dateOfBirth: Date
+    var dateOfBirth: Date?
 
     @Parent(key: "user_type_id")
     var userType: UserType
@@ -41,22 +41,24 @@ final class User: Model, Content, Authenticatable {
     init() {}
 
     init(
-        name: String,
-        surname: String, 
-        email: String,
-        phoneNumber: String,
-        userTypeId: UUID,
-        dateOfBirth: Date,
-        password: String
+        name: String?,
+        surname: String?,
+        email: String?,
+        phoneNumber: String?,
+        userTypeId: UUID?,
+        dateOfBirth: Date?,
+        password: String?
     ) throws {
         self.name = name
         self.surname = surname
         self.email = email
         self.phoneNumber = phoneNumber
-        self.$userType.id = userTypeId
+        self.$userType.id = userTypeId ?? UUID(uuidString: "71BEAC26-4426-4620-9F74-DA6DCA89D792")!
         self.dateOfBirth = dateOfBirth
 
-        guard let hashedPassword = try? Bcrypt.hash(password) else {
+        guard
+            let password,
+            let hashedPassword = try? Bcrypt.hash(password) else {
             throw InitError.passwordHashingFailed
         }
 
