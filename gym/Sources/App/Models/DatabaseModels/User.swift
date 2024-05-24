@@ -64,4 +64,16 @@ final class User: Model, Content, Authenticatable {
 
         self.passwordHash = hashedPassword
     }
+
+    var isAdmin: Bool {
+        userType.id == UUID(uuidString: "5A60DA33-BBCD-4F0F-B95B-D445F29D9EC7")!
+    }
+
+    var isEmployee: Bool {
+        userType.id == UUID(uuidString: "26519AEA-35B9-49A3-8E56-FCBB370E617D")!
+    }
+
+    var isMember: Bool {
+        userType.id == UUID(uuidString: "71BEAC26-4426-4620-9F74-DA6DCA89D792")!
+    }
 }

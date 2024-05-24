@@ -12,6 +12,7 @@ struct CreateSubscription: Migration {
             .field("valid_from", .datetime, .required)
             .field("valid_until", .datetime, .required)
             .field("subscription_type_id", .uuid, .required, .references("subscription_types", "id", onDelete: .cascade))
+            .field("approved", .bool, .required)
             .create()
     }
 

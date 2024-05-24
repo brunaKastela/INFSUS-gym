@@ -12,16 +12,39 @@ struct APIController: RouteCollection {
 
         let gymAdmin = routes.grouped("gym", "admin")
 
-        gymAdmin.get("members", use: members)
-        gymAdmin.post("members", use: addMember)
-        gymAdmin.get("members", ":memberId", use: member)
-        gymAdmin.put("members", use: updateMember)
-        gymAdmin.delete("members", ":memberId", use: deleteMember)
+        gymAdmin.get("user", use: users)
+        gymAdmin.post("user", use: addUser)
+        gymAdmin.get("user", ":userId", use: getUser)
+        gymAdmin.put("users", use: updateUser)
+        gymAdmin.delete("users", ":userId", use: deleteUser)
 
         let gymMemberships = routes.grouped("gym", "memberships")
         gymMemberships.get(use: getMemberships)
         gymMemberships.get("types", use: getSubscriptionTypes)
         gymMemberships.post(use: subscribeToMembership)
+
+        let gymEmployee = routes.grouped("gym", "employee")
+        gymEmployee.get("members", use: getMembers)
+        gymEmployee.post("members", "approveSubsctiption", ":subscriptionId", use: approveSubscription)
+    }
+}
+
+extension APIController {
+
+    func getMembers(req: Request) throws -> EventLoopFuture<[User]> {
+        User.query(on: req.db)
+            .filter(\User.$userType.$id, .equal, UUID(uuidString: UserTypes.member.rawValue)!)
+            .all()
+    }
+
+    func approveSubscription(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        Subscription
+            .find(req.parameters.get("subscriptionId"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { subscription in
+                subscription.approved = true
+                return subscription.update(on: req.db).transform(to: .ok)
+            }
     }
 }
 
@@ -129,23 +152,23 @@ extension APIController {
 
 extension APIController {
 
-    func members(req: Request) throws -> EventLoopFuture<[User]> {
+    func users(req: Request) throws -> EventLoopFuture<[User]> {
         User.query(on: req.db).all()
     }
 
-    func addMember(req: Request) throws -> EventLoopFuture<User> {
+    func addUser(req: Request) throws -> EventLoopFuture<User> {
         let member = try req.content.decode(User.self)
 
         return member.create(on: req.db).map { member }
     }
 
-    func member(req: Request) throws -> EventLoopFuture<User> {
+    func getUser(req: Request) throws -> EventLoopFuture<User> {
         User
-            .find(req.parameters.get("memberId"), on: req.db)
+            .find(req.parameters.get("userId"), on: req.db)
             .unwrap(or: Abort(.notFound))
     }
 
-    func updateMember(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+    func updateUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let updateUserDTO = try req.content.decode(UserDTO.self)
 
         return User.find(updateUserDTO.id, on: req.db)
@@ -174,9 +197,9 @@ extension APIController {
             }
     }
 
-    func deleteMember(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+    func deleteUser(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         User
-            .find(req.parameters.get("memberId"), on: req.db)
+            .find(req.parameters.get("userId"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap {
                 $0.delete(on: req.db)

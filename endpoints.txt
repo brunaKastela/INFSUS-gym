@@ -122,3 +122,18 @@ ENDPOINTS
         "subscriptionTypeId": "E5F1FA66-247B-42B6-89FE-A6A353450E33"
     }
     
+    - GET http://127.0.0.1:8080/gym/employee/members
+    -ODGOVOR [
+        {
+            "dateOfBirth": "2024-05-24T20:17:10Z",
+            "id": "1B2545AD-7842-4844-AD3F-A519A031B751",
+            "phoneNumber": "0996571382",
+            "passwordHash": "$2b$12$QP9Akf8TaLahjBJLWdEUyulUxLrGEZMj0U8kIkl4XunMkYyOGQBCi",
+            "email": "mojmail@gmail.com",
+            "userType": {
+                "id": "71BEAC26-4426-4620-9F74-DA6DCA89D792"
+            },
+            "name": "Milan",
+            "surname": "Vida"
+        }
+    ]

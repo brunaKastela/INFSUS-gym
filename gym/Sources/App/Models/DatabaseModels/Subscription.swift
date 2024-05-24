@@ -24,6 +24,9 @@ final class Subscription: Model, Content {
     @Parent(key: "subscription_type_id")
     var subscriptionType: SubscriptionType
 
+    @Field(key: "approved")
+    var approved: Bool
+
     init() {}
 
     init(
@@ -31,12 +34,14 @@ final class Subscription: Model, Content {
         membershipId: UUID,
         validFrom: Date,
         validUntil: Date,
-        subscriptionTypeId: UUID
+        subscriptionTypeId: UUID,
+        approved: Bool? = nil
     ) {
         self.$member.id = memberId
         self.$membership.id = membershipId
         self.validFrom = validFrom
         self.validUntil = validUntil
         self.$subscriptionType.id = subscriptionTypeId
+        self.approved = approved ?? false
     }
 }
