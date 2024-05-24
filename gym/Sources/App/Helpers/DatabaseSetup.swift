@@ -272,20 +272,29 @@ extension DatabaseSetup {
 
 
     func fillMemberships() {
+        let sampleIds: [UUID] = [
+            UUID(uuidString: "AC55BCFF-87B5-425D-A3C0-61E608371BBA")!,
+            UUID(uuidString: "22AF66FB-49FD-4165-B3DB-5A29010273B8")!,
+            UUID(uuidString: "5B6BE6E1-A2B8-45D3-9032-3B38069EA366")!
+        ]
+
         memberships = [
             Membership(
+                id: sampleIds[0],
                 title: "Premium",
                 description: "Full access to all gym facilities",
                 weeklyPrice: 20.0,
                 monthlyPrice: 70.0,
                 yearlyPrice: 700.0),
             Membership(
+                id: sampleIds[1],
                 title: "Standard",
                 description: "Basic access to gym facilities",
                 weeklyPrice: 15.0,
                 monthlyPrice: 50.0,
                 yearlyPrice: 500.0),
             Membership(
+                id: sampleIds[2],
                 title: "Student",
                 description: "Discounted access for students",
                 weeklyPrice: 10.0,
@@ -295,10 +304,15 @@ extension DatabaseSetup {
     }
 
     func fillSubscriptionTypes() {
+        let sampleIds: [UUID] = [
+            UUID(uuidString: "E5F1FA66-247B-42B6-89FE-A6A353450E33")!,
+            UUID(uuidString: "290CA7F4-F57E-43AA-A1FA-5698A54E36A1")!,
+            UUID(uuidString: "BC58E909-50FE-4B69-9804-9CD3F9758E6F")!
+        ]
         subscriptionTypes = [
-            SubscriptionType(title: "weekly"),
-            SubscriptionType(title: "monthly"),
-            SubscriptionType(title: "yearly")
+            SubscriptionType(id: sampleIds[0], title: "weekly"),
+            SubscriptionType(id: sampleIds[1], title: "monthly"),
+            SubscriptionType(id: sampleIds[2], title: "yearly")
         ]
     }
 

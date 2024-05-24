@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-struct UpdateUserDTO: Content {
+struct UserDTO: Content {
     var id: UUID?
     var name: String?
     var surname: String?

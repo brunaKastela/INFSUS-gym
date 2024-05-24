@@ -18,8 +18,10 @@ final class SubscriptionType: Model, Content {
     init() {}
 
     init(
+        id: UUID? = nil,
         title: String
     ) {
+        self.id = id
         self.title = title
     }
 }

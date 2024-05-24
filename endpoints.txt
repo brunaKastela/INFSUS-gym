@@ -1,6 +1,6 @@
 ENDPOINTS
 
-1. Members
+1. ADMIN Members
     - GET http://127.0.0.1:8080/gym/admin/members
     - ODGOVOR [{
         "phoneNumber": String,
@@ -46,3 +46,79 @@ ENDPOINTS
 
     -DELETE http://127.0.0.1:8080/gym/admin/members/:id
     - ODGOVOR 200 OK ili not found
+
+2. USER
+    - GET http://127.0.0.1:8080/gym/member/account/:id
+    - ODGOVOR 
+    {
+        "id": "350F3F97-1785-46BD-BB78-01FDBB86C0AD",
+        "dateOfBirth": "2024-05-23T21:51:16Z",
+        "email": "mojmail@gmail.com",
+        "name": "Sara",
+        "userType": {
+            "id": "26519AEA-35B9-49A3-8E56-FCBB370E617D"
+        },
+        "passwordHash": "$2b$12$Pya7Sm1SzL7P2d5kOnofu.DysjdVK3QKQdqe6mhZHWhl9bSoDl/m6",
+        "phoneNumber": "0996571382",
+        "surname": "Perisic"
+    }
+
+    - POST http://127.0.0.1:8080/gym/member/createAccount
+    - POSLATI MINIMALNO
+    - {
+        "name": "Roko",
+        "surname": "Kurtela",
+        "password": "12345678",
+        "userType": {
+            "id": "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
+        },
+        "email": "roko@gmail.com"
+    }
+
+    - GET http://127.0.0.1:8080/gym/memberships
+    - ODGOVOR [{
+        "weeklyPrice": 20,
+        "description": "Full access to all gym facilities",
+        "monthlyPrice": 70,
+        "yearlyPrice": 700,
+        "id": "42FDF522-A57B-42DB-9FA9-BF51F9A9AAE5",
+        "title": "Premium"
+    }]
+
+    - GET http://127.0.0.1:8080/gym/memberships/types
+    - ODGOVOR [{
+            "id": "FF977B0E-2AB0-4AAE-8377-F66B2F3EA9C7",
+            "title": "weekly"
+        },
+        {
+            "title": "monthly",
+            "id": "4C847C77-296D-4C3C-9973-B03017DBD779"
+        },
+        {
+            "id": "5AB8899C-919A-4DE4-8B24-7F6A6CEDB896",
+            "title": "yearly"
+        }]
+
+    - GET http://127.0.0.1:8080/gym/member/subscriptions/:memberID
+    - ODGOVOR [{
+        "validFrom": "2024-05-24T16:59:34Z",
+        "subscriptionType": {
+            "id": "47DB3F80-2801-4060-B7FD-5AD2994C6FC3"
+        },
+        "id": "9F94CCCE-AF07-4BEE-8DAA-D811C01A20FA",
+        "validUntil": "2024-06-24T16:59:34Z",
+        "member": {
+            "id": "C2C3E2B3-45CA-47FE-A394-8A8EABC08805"
+        },
+        "membership": {
+            "id": "D693BF2C-53BA-4533-9359-E17EF1BDFD6E"
+        }
+    }]
+
+    - POST http://127.0.0.1:8080/gym/memberships
+    - POSLATI {
+        "userId":"66F50C8B-086B-4678-A35C-9B90BD78AED3",
+        "membershipId":"AC55BCFF-87B5-425D-A3C0-61E608371BBA",
+        "subscriptionTypeId": "E5F1FA66-247B-42B6-89FE-A6A353450E33"
+    }
+    
