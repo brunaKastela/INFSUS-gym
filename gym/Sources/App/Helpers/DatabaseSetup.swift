@@ -246,6 +246,11 @@ extension DatabaseSetup {
 extension DatabaseSetup {
 
     func fillLocations() {
+        let sampleIds: [UUID] = [
+            UUID(uuidString: "2A4EF2DB-961C-40CA-AD14-2414280AE9A6")!,
+            UUID(uuidString: "5D1CE734-59C6-4DDF-82A4-8F1887D46175")!,
+            UUID(uuidString: "DC76CD32-19FB-4ABF-A21F-26829F25ADAC")!
+        ]
         let sampleAddresses = ["Ilica 10", "Odranska 8", "Heinzlova 47"]
         let sampleDescriptions = ["Beautiful gym near the park", "Cozy in the downtown area", "Modern gym space"]
         let sampleCapacities = [10, 25, 50]
@@ -258,6 +263,7 @@ extension DatabaseSetup {
 
         for i in 0..<sampleAddresses.count {
             let location = Location(
+                id: sampleIds[i],
                 address: sampleAddresses[i],
                 description: sampleDescriptions[i],
                 capacity: sampleCapacities[i],

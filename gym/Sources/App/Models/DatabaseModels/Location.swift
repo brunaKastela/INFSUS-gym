@@ -36,6 +36,7 @@ final class Location: Model, Content {
     init () {}
 
     init(
+        id: UUID? = nil,
         address: String,
         description: String,
         capacity: Int,
@@ -44,6 +45,7 @@ final class Location: Model, Content {
         opening: Int,
         closing: Int
     ) {
+        self.id = id
         self.address = address
         self.description = description
         self.capacity = capacity

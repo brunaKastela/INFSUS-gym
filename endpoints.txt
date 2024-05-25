@@ -137,3 +137,41 @@ ENDPOINTS
             "surname": "Vida"
         }
     ]
+
+    - POST http://127.0.0.1:8080/gym/employee/members/approveSubsctiption/8E8BCC32-DD0F-471E-A89D-42770209D7D2
+    - ODGOVOR 200 OK
+
+    - GET http://127.0.0.1:8080/gym/locations
+    - ODGOVOR [
+    {
+        "email": "infoIlicaGym@gmail.com",
+        "description": "Beautiful gym near the park",
+        "phoneNumber": "0996571382",
+        "capacity": 10,
+        "closing": 19,
+        "address": "Ilica 10",
+        "id": "2532C110-63C0-4137-8776-4BDF2887AC39",
+        "opening": 11
+    }]
+
+    - GET http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC/2024-05-28T00:00:00Z
+    - timeslots of location on a date
+    - [{
+        "location": {
+            "address": "Heinzlova 47",
+            "description": "Modern gym space",
+            "closing": 19,
+            "id": "DC76CD32-19FB-4ABF-A21F-26829F25ADAC",
+            "opening": 11,
+            "phoneNumber": "0996578393",
+            "email": "infoHeinzlovaGym@gmail.com",
+            "capacity": 50
+        },
+        "id": "AE8B4514-E4F7-47BE-87A5-66FE91E1BC3E",  -- ovaj se id salje za rezervaciju termina
+        "timeslot": {
+            "id": "52846780-5D6E-4EB3-81B1-CA493004A543",
+            "startTime": "2024-05-28T16:00:00Z",
+            "endTime": "2024-05-28T17:00:00Z"
+        },
+        "currentCapacity": 0
+    }]
