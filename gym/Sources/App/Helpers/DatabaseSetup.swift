@@ -133,21 +133,28 @@ extension DatabaseSetup {
 
         userTypeIds.whenSuccess { userTypeIds in
             var userCreationFutures: [EventLoopFuture<Void>] = []
-            let sampleNames = ["Mia", "Lea", "Dea", "Luka", "Ivan", "Lovre", "Maja", "Sara", "Milan", "Tina", "Lara"]
-            let sampleSurnames = ["Lovric", "Saric", "Johnson", "Vekic", "Modric", "Mandzukic", "Olic", "Rakitic", "Perisic", "Vida", "Brozovic"]
+            let sampleNames = ["Mia", "Lea", "Dea", "Luka", "Ivan", "Lovre", "Maja", "Sara", "Milan", "Tina", "Lara", "Lovorka", "Marija", "Ante", "Magdalena", "Mile"]
+            let sampleSurnames = ["Lovric", "Saric", "Johnson", "Vekic", "Modric", "Mandzukic", "Olic", "Rakitic", "Perisic", "Vida", "Brozovic", "Matic", "Horvat", "Raic", "Kipcic", "Mikulic"]
             let samplePhoneNumbers = ["0996571382", "0996543382", "0996578393","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382","0996571382"]
+            let sampleEmails = sampleNames.map { name in
+                "\(name.lowercased())@gmail.com"
+            }
+
+            let date = Date()
+            let calendar = Calendar.current
+            let date20YearsAgo = calendar.date(byAdding: .year, value: -20, to: date)
 
             do {
-                for i in 0..<count {
+                for i in 0..<sampleNames.count {
                     let userTypeId = userTypeIds[i % 2 + 1]
 
                     let user = try User(
-                        name: sampleNames.randomElement() ?? "Unknown",
-                        surname: sampleSurnames.randomElement() ?? "Unknown",
-                        email: "mojmail@gmail.com",
-                        phoneNumber: samplePhoneNumbers.randomElement() ?? "Unknown",
+                        name: sampleNames[i],
+                        surname: sampleSurnames[i],
+                        email: sampleEmails[i],
+                        phoneNumber: samplePhoneNumbers.randomElement(),
                         userTypeId: userTypeId,
-                        dateOfBirth: Date(),
+                        dateOfBirth: date20YearsAgo,
                         password: "12345678"
                     )
                     let userCreationFuture = user.create(on: database)
@@ -156,10 +163,10 @@ extension DatabaseSetup {
                 let user = try User(
                     name: "Bossman",
                     surname: "Bosic",
-                    email: "mojmail@gmail.com",
+                    email: "admin@gmail.com",
                     phoneNumber: samplePhoneNumbers.randomElement() ?? "Unknown",
                     userTypeId: userTypeIds[0],
-                    dateOfBirth: Date(),
+                    dateOfBirth: date20YearsAgo,
                     password: "12345678"
                 )
                 let userCreationFuture = user.create(on: database)

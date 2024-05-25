@@ -14,6 +14,7 @@ struct APIController: RouteCollection {
 
         gymAccount.post("createAccount", use: accountController.createAccount)
         gymAccount.get(":memberId", use: accountController.account)
+        gymAccount.post("login", use: accountController.login)
 
         let gymAdmin = routes.grouped("gym", "admin", "users")
 

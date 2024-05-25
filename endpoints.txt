@@ -1,52 +1,93 @@
 ENDPOINTS
 
 1. ADMIN Members
-    - GET http://127.0.0.1:8080/gym/admin/members
+    - GET http://127.0.0.1:8080/gym/admin/users
     - ODGOVOR [{
-        "phoneNumber": String,
-        "userType": {
-            "id": String
-        },
-        "email": String,
-        "id": String,
-        "surname": String,
-        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
-        "name": String
+        "phoneNumber": "0996571382",
+        "name": "Mia",
+        "email": "mia@example.com",
+        "id": "6B0E6BDF-6F14-48C7-B523-F4155849FFFD",
+        "userTypeId": "26519AEA-35B9-49A3-8E56-FCBB370E617D",
+        "userTypeName": "employee",
+        "surname": "Lovric",
+        "dateOfBirth": "2004-05-25T15:08:33Z"
     }]
 
-    - GET http://127.0.0.1:8080/gym/admin/members/:id # "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
+    - GET http://127.0.0.1:8080/gym/admin/members/:id # 6B0E6BDF-6F14-48C7-B523-F4155849FFFD
     - ODGOVOR {
-        "phoneNumber": String,
-        "userType": {
-            "id": String
-        },
-        "email": String,
-        "id": String,
-        "surname": String,
-        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
-        "name": String
+        "email": "mia@example.com",
+        "phoneNumber": "0996571382",
+        "userTypeId": "26519AEA-35B9-49A3-8E56-FCBB370E617D",
+        "dateOfBirth": "2004-05-25T15:08:33Z",
+        "id": "6B0E6BDF-6F14-48C7-B523-F4155849FFFD",
+        "name": "Mia",
+        "surname": "Lovric",
+        "userTypeName": "employee"
     }
 
-    - POST http://127.0.0.1:8080/gym/admin/members
+    - POST http://127.0.0.1:8080/gym/admin/users
+    - kreiranje usera
     - POSLATI {
-        "name": String,
-        "surname": String,
-        "phoneNumber": String,
-        "dateOfBirth": Date, # "2024-05-23T15:21:27Z"
-        "email": String,
-        "userType": {
-            "id": String, # "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
-        }
+        "name": "Roko",
+        "surname": "Kurtela",
+        "phoneNumber": "0987377399",
+        "dateOfBirth": "2000-05-23T00:00:00Z",
+        "email": "roko@gmail.com",
+        "userTypeId": "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7",
+        "password": "12345678"
+    }
+    - struct CreateUserRequest: Content {
+        var name: String
+        var surname: String
+        var email: String
+        var phoneNumber: String
+        var dateOfBirth: Date
+        var password: String
+        var userTypeId: UUID
     }
 
-    -PUT http://127.0.0.1:8080/gym/admin/members/:id
+    -PUT http://127.0.0.1:8080/gym/admin/users/:id
     - POSLATI {
-        "id": "1F926AD4-5A14-41C4-9ED9-6F4A537044D3" + atributi koji se mijenjaju
+        "id": "F22CF97B-9CF4-4D97-8FC2-4E485345E5D0",
+        "name": "Pavo",
+        "surname": "Walsh",
+        "email": "pavinMail@mail.com",
+        "dateOfBirth": "2035-05-23T15:21:27Z"
+    }
+    - samo Id mora imati
+    - struct UserDTO: Content {
+        var id: UUID?
+        var name: String?
+        var surname: String?
+        var email: String?
+        var phoneNumber: String?
+        var dateOfBirth: Date?
+        var userTypeId: UUID?
+        var password: String?
     }
 
-    -DELETE http://127.0.0.1:8080/gym/admin/members/:id
+    -DELETE http://127.0.0.1:8080/gym/admin/users/:id
     - ODGOVOR 200 OK ili not found
 
+2. ACCOUNT
+    - POST http://127.0.0.1:8080/gym/account/login
+    - POSLATI {
+        "email" : "mia@example.com",
+        "password": "12345678"
+    }
+    - ODGOVOR {
+        "dateOfBirth": "2004-05-25T15:08:33Z",
+        "userTypeId": "26519AEA-35B9-49A3-8E56-FCBB370E617D",
+        "userTypeName": "employee",
+        "id": "6B0E6BDF-6F14-48C7-B523-F4155849FFFD",
+        "phoneNumber": "0996571382",
+        "name": "Mia",
+        "surname": "Lovric",
+        "email": "mia@example.com"
+    }
+
+Dalje nije updateano
+=========================================================================================
 2. USER
     - GET http://127.0.0.1:8080/gym/member/account/:id
     - ODGOVOR 

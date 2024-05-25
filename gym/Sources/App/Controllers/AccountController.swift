@@ -29,4 +29,37 @@ struct AccountController {
             .find(req.parameters.get("memberId"), on: req.db)
             .unwrap(or: Abort(.notFound))
     }
+
+    func login(req: Request) throws -> EventLoopFuture<UserSafeDTO> {
+        let loginDTO = try req.content.decode(LoginDTO.self)
+
+        return User.query(on: req.db)
+            .with(\.$userType)
+            .filter(\User.$email, .equal, loginDTO.email)
+            .first()
+            .unwrap(or: Abort(.notFound, reason: "User not found"))
+            .flatMapThrowing { user in
+                guard let hashedPassword = user.passwordHash else {
+                    throw Abort(.internalServerError, reason: "User password is not hashed")
+                }
+                do {
+                    let isValidPassword = try Bcrypt.verify(loginDTO.password, created: hashedPassword)
+                    guard isValidPassword else {
+                        throw Abort(.unauthorized, reason: "Invalid password")
+                    }
+                    return UserSafeDTO(
+                        id: user.id,
+                        name: user.name,
+                        surname: user.surname,
+                        email: user.email,
+                        phoneNumber: user.phoneNumber,
+                        dateOfBirth: user.dateOfBirth,
+                        userTypeId: user.$userType.id,
+                        userTypeName: user.userType.title
+                    )
+                } catch {
+                    throw Abort(.unauthorized, reason: "Invalid password")
+                }
+            }
+    }
 }
