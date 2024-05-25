@@ -3,14 +3,42 @@ import Vapor
 
 struct MemberController {
 
-    func getSubscriptions(req: Request) throws -> EventLoopFuture<[Subscription]> {
+    func getSubscriptions(req: Request) throws -> EventLoopFuture<[SubscriptionResponseDTO]> {
         guard let memberId = req.parameters.get("memberId", as: UUID.self) else {
             throw Abort(.badRequest)
         }
 
         return Subscription.query(on: req.db)
-            .filter(\Subscription.$member.$id, .equal, memberId)
+            .with(\.$member)
+            .with(\.$member) { member in
+                member.with(\.$userType)
+            }
+            .with(\.$membership)
+            .with(\.$subscriptionType)
+            .filter(\.$member.$id, .equal ,memberId)
             .all()
+            .flatMapThrowing { subscriptions in
+                subscriptions.map { subscription in
+                    SubscriptionResponseDTO(
+                        subscriptionId: subscription.id,
+                        member: UserSafeDTO(
+                            id: subscription.member.id,
+                            name: subscription.member.name,
+                            surname: subscription.member.surname,
+                            email: subscription.member.email,
+                            phoneNumber: subscription.member.phoneNumber,
+                            dateOfBirth: subscription.member.dateOfBirth,
+                            userTypeId: subscription.member.$userType.id,
+                            userTypeName: subscription.member.userType.title
+                        ),
+                        membership: subscription.membership,
+                        subscriptionType: subscription.subscriptionType,
+                        validFrom: subscription.validFrom,
+                        validUntil: subscription.validUntil,
+                        approved: subscription.approved
+                    )
+                }
+            }
     }
 
     func getMemberships(req: Request) throws -> EventLoopFuture<[Membership]> {

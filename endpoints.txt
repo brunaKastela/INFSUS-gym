@@ -70,6 +70,8 @@ ENDPOINTS
     - ODGOVOR 200 OK ili not found
 
 2. ACCOUNT
+
+    - LOGIN
     - POST http://127.0.0.1:8080/gym/account/login
     - POSLATI {
         "email" : "mia@example.com",
@@ -86,35 +88,42 @@ ENDPOINTS
         "email": "mia@example.com"
     }
 
-Dalje nije updateano
-=========================================================================================
-2. USER
-    - GET http://127.0.0.1:8080/gym/member/account/:id
-    - ODGOVOR 
-    {
-        "id": "350F3F97-1785-46BD-BB78-01FDBB86C0AD",
-        "dateOfBirth": "2024-05-23T21:51:16Z",
-        "email": "mojmail@gmail.com",
-        "name": "Sara",
-        "userType": {
-            "id": "26519AEA-35B9-49A3-8E56-FCBB370E617D"
-        },
-        "passwordHash": "$2b$12$Pya7Sm1SzL7P2d5kOnofu.DysjdVK3QKQdqe6mhZHWhl9bSoDl/m6",
-        "phoneNumber": "0996571382",
-        "surname": "Perisic"
-    }
-
-    - POST http://127.0.0.1:8080/gym/member/createAccount
-    - POSLATI MINIMALNO
-    - {
+    - CREATE ACCOUNT
+    - POST http://127.0.0.1:8080/gym/account/createAccount
+    - POSLATI {
         "name": "Roko",
         "surname": "Kurtela",
-        "password": "12345678",
-        "userType": {
-            "id": "5a60da33-bbcd-4f0f-b95b-d445f29d9ec7"
-        },
-        "email": "roko@gmail.com"
+        "phoneNumber": "0987377399",
+        "dateOfBirth": "2000-05-23T00:00:00Z",
+        "email": "rokoMember@gmail.com",
+        "userTypeId": "71BEAC26-4426-4620-9F74-DA6DCA89D792",
+        "password": "12345678"
     }
+    - ODGOVOR {
+        "phoneNumber": "0987377399",
+        "email": "rokoMember@gmail.com",
+        "name": "Roko",
+        "userTypeName": "member",
+        "dateOfBirth": "2000-05-23T00:00:00Z",
+        "userTypeId": "71BEAC26-4426-4620-9F74-DA6DCA89D792",
+        "id": "1693F599-91A1-41C8-8137-96CABB2D4AEF",
+        "surname": "Kurtela"
+    }
+
+    - GET ACCOUNT
+    - GET http://127.0.0.1:8080/gym/account/1693F599-91A1-41C8-8137-96CABB2D4AEF
+    - ODGOVOR {
+        "dateOfBirth": "2000-05-23T00:00:00Z",
+        "phoneNumber": "0987377399",
+        "userTypeId": "71BEAC26-4426-4620-9F74-DA6DCA89D792",
+        "id": "1693F599-91A1-41C8-8137-96CABB2D4AEF",
+        "surname": "Kurtela",
+        "userTypeName": "member",
+        "email": "rokoMember@gmail.com",
+        "name": "Roko"
+    }
+
+2. MEMBER
 
     - GET http://127.0.0.1:8080/gym/memberships
     - ODGOVOR [{
@@ -142,17 +151,31 @@ Dalje nije updateano
 
     - GET http://127.0.0.1:8080/gym/member/subscriptions/:memberID
     - ODGOVOR [{
-        "validFrom": "2024-05-24T16:59:34Z",
+        subscriptionId: subscription.id,
         "subscriptionType": {
-            "id": "47DB3F80-2801-4060-B7FD-5AD2994C6FC3"
+            "title": "yearly",
+            "id": "BC58E909-50FE-4B69-9804-9CD3F9758E6F"
         },
-        "id": "9F94CCCE-AF07-4BEE-8DAA-D811C01A20FA",
-        "validUntil": "2024-06-24T16:59:34Z",
-        "member": {
-            "id": "C2C3E2B3-45CA-47FE-A394-8A8EABC08805"
-        },
+        "validFrom": "2024-05-25T16:07:01Z",
+        "validUntil": "2025-05-25T16:07:01Z",
         "membership": {
-            "id": "D693BF2C-53BA-4533-9359-E17EF1BDFD6E"
+            "weeklyPrice": 10,
+            "description": "Discounted access for students",
+            "id": "5B6BE6E1-A2B8-45D3-9032-3B38069EA366",
+            "yearlyPrice": 300,
+            "title": "Student",
+            "monthlyPrice": 30
+        },
+        "approved": false,
+        "member": {
+            "userTypeName": "employee",
+            "email": "mia@gmail.com",
+            "id": "E5D73F11-ACA3-4F89-B43B-D6A6CEFB9E11",
+            "phoneNumber": "0996571382",
+            "surname": "Lovric",
+            "dateOfBirth": "2004-05-25T16:06:51Z",
+            "name": "Mia",
+            "userTypeId": "26519AEA-35B9-49A3-8E56-FCBB370E617D"
         }
     }]
 
@@ -162,22 +185,50 @@ Dalje nije updateano
         "membershipId":"AC55BCFF-87B5-425D-A3C0-61E608371BBA",
         "subscriptionTypeId": "E5F1FA66-247B-42B6-89FE-A6A353450E33"
     }
-    
+
     - GET http://127.0.0.1:8080/gym/employee/members
     -ODGOVOR [
         {
-            "dateOfBirth": "2024-05-24T20:17:10Z",
-            "id": "1B2545AD-7842-4844-AD3F-A519A031B751",
-            "phoneNumber": "0996571382",
-            "passwordHash": "$2b$12$QP9Akf8TaLahjBJLWdEUyulUxLrGEZMj0U8kIkl4XunMkYyOGQBCi",
-            "email": "mojmail@gmail.com",
-            "userType": {
-                "id": "71BEAC26-4426-4620-9F74-DA6DCA89D792"
-            },
-            "name": "Milan",
-            "surname": "Vida"
+        "id": "FBF323D4-D2A8-4B52-89BE-C29AB8FA77E8",
+        "email": "lea@gmail.com",
+        "surname": "Saric",
+        "name": "Lea",
+        "phoneNumber": "0996571382",
+        "userTypeId": "71BEAC26-4426-4620-9F74-DA6DCA89D792",
+        "userTypeName": "member",
+        "dateOfBirth": "2004-05-25T16:21:15Z"
+    }]
+
+    - GET http://127.0.0.1:8080/gym/employee/members/subscriptions
+    -ODGOVOR [
+        {
+        "member": {
+            "userTypeId": "26519AEA-35B9-49A3-8E56-FCBB370E617D",
+            "userTypeName": "employee",
+            "surname": "Lovric",
+            "dateOfBirth": "2004-05-25T16:25:30Z",
+            "email": "mia@gmail.com",
+            "id": "935E9660-D9C0-4EB0-8856-AA5AAC6A8061",
+            "name": "Mia",
+            "phoneNumber": "0996578393"
+        },
+        "approved": false,
+        "validFrom": "2024-05-25T16:25:38Z",
+        "membership": {
+            "id": "AC55BCFF-87B5-425D-A3C0-61E608371BBA",
+            "description": "Full access to all gym facilities",
+            "yearlyPrice": 700,
+            "weeklyPrice": 20,
+            "title": "Premium",
+            "monthlyPrice": 70
+        },
+        "validUntil": "2025-05-25T16:25:38Z",
+        "subscriptionId": "AFADD482-73C3-4C10-B2BA-3AF83F2DFFFF",
+        "subscriptionType": {
+            "id": "BC58E909-50FE-4B69-9804-9CD3F9758E6F",
+            "title": "yearly"
         }
-    ]
+    }]
 
     - POST http://127.0.0.1:8080/gym/employee/members/approveSubsctiption/8E8BCC32-DD0F-471E-A89D-42770209D7D2
     - ODGOVOR 200 OK
@@ -194,6 +245,43 @@ Dalje nije updateano
         "id": "2532C110-63C0-4137-8776-4BDF2887AC39",
         "opening": 11
     }]
+
+    - GET http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC
+    - ODGOVOR {
+        "email": "infoIlicaGym@gmail.com",
+        "description": "Beautiful gym near the park",
+        "phoneNumber": "0996571382",
+        "capacity": 10,
+        "closing": 19,
+        "address": "Ilica 10",
+        "id": "2532C110-63C0-4137-8776-4BDF2887AC39",
+        "opening": 11
+    }
+
+    - GET http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC/2024-05-28T00:00:00Z
+    - timeslots of location on a date
+    - [{
+        "location": {
+            "address": "Heinzlova 47",
+            "description": "Modern gym space",
+            "closing": 19,
+            "id": "DC76CD32-19FB-4ABF-A21F-26829F25ADAC",
+            "opening": 11,
+            "phoneNumber": "0996578393",
+            "email": "infoHeinzlovaGym@gmail.com",
+            "capacity": 50
+        },
+        "id": "AE8B4514-E4F7-47BE-87A5-66FE91E1BC3E",  -- ovaj se id salje za rezervaciju termina
+        "timeslot": {
+            "id": "52846780-5D6E-4EB3-81B1-CA493004A543",
+            "startTime": "2024-05-28T16:00:00Z",
+            "endTime": "2024-05-28T17:00:00Z"
+        },
+        "currentCapacity": 0
+    }]
+
+Dalje nije updateano
+=========================================================================================
 
     - GET http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC/2024-05-28T00:00:00Z
     - timeslots of location on a date

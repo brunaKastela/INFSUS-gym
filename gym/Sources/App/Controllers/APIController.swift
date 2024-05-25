@@ -12,8 +12,8 @@ struct APIController: RouteCollection {
 
         let gymAccount = routes.grouped("gym", "account")
 
-        gymAccount.post("createAccount", use: accountController.createAccount)
-        gymAccount.get(":memberId", use: accountController.account)
+        gymAccount.post("createAccount", use: accountController.addUser)
+        gymAccount.get(":userId", use: accountController.getUser)
         gymAccount.post("login", use: accountController.login)
 
         let gymAdmin = routes.grouped("gym", "admin", "users")
@@ -24,15 +24,15 @@ struct APIController: RouteCollection {
         gymAdmin.put(use: userController.updateUser)
         gymAdmin.delete(":userId", use: userController.deleteUser)
 
-        let gymMember = routes.grouped("gym", "member")
-        let gymMemberships = routes.grouped("gym", "member", "memberships")
+        let gymMemberships = routes.grouped("gym", "memberships")
         gymMemberships.get(use: memberController.getMemberships)
         gymMemberships.get("types", use: memberController.getSubscriptionTypes)
         gymMemberships.post(use: memberController.subscribeToMembership)
-        gymMember.get("subscriptions",":memberId", use: memberController.getSubscriptions)
+        gymMemberships.get("subscriptions",":memberId", use: memberController.getSubscriptions)
 
         let gymEmployee = routes.grouped("gym", "employee")
         gymEmployee.get("members", use: employeeController.getMembers)
+        gymEmployee.get("members", "subscriptions", use: employeeController.getSubscriptions)
         gymEmployee.post("members", "approveSubsctiption", ":subscriptionId", use: employeeController.approveSubscription)
 
         let gymLocation = routes.grouped("gym", "locations")
