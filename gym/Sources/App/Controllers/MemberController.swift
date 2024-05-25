@@ -63,7 +63,9 @@ struct MemberController {
                 }
 
                 return SubscriptionType.find(subscriptionDTO.subscriptionTypeId, on: req.db).flatMap { subscription -> EventLoopFuture<HTTPStatus> in
-                    guard let subscription = subscription else {
+                    guard
+                        let subscription = subscription,
+                            let userId = user.id else {
                         return req.eventLoop.makeFailedFuture(Abort(.notFound))
                     }
 
@@ -84,22 +86,40 @@ struct MemberController {
                         return req.eventLoop.makeFailedFuture(Abort(.internalServerError))
                     }
 
-                    let newSubscription = Subscription(
-                        memberId: user.id!,
-                        membershipId: membership.id!,
-                        validFrom: startDate,
-                        validUntil: endDate,
-                        subscriptionTypeId: subscription.id!
-                    )
+                    return Subscription
+                        .query(on: req.db)
+                        .filter(\.$member.$id, .equal, userId)
+                        .filter(\.$validFrom, .lessThanOrEqual, endDate)
+                        .filter(\.$validUntil, .greaterThanOrEqual, startDate)
+                        .filter(\.$approved, .equal, true)
+                        .first()
+                        .flatMap { existingSubscription in
+                            if let _ = existingSubscription {
+                                let errorReason = "There is already an approved subscription covering this date period"
+                                return req.eventLoop.makeFailedFuture(Abort(.conflict, reason: errorReason))
+                            } else {
+                                let newSubscription = Subscription(
+                                    memberId: user.id!,
+                                    membershipId: membership.id!,
+                                    validFrom: startDate,
+                                    validUntil: endDate,
+                                    subscriptionTypeId: subscription.id!
+                                )
 
-                    return newSubscription.save(on: req.db)
-                        .transform(to: .ok)
+                                return newSubscription.save(on: req.db)
+                                    .transform(to: .ok)
+                            }
+                        }
                 }
             }
         }
     }
 
     func getReservations(req: Request) throws -> EventLoopFuture<[ReservationResponse]> {
+        guard let memberId = req.parameters.get("memberId", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+
         return Reservation.query(on: req.db)
             .with(\.$user)
             .with(\.$timeslotLocation) { timeslotLocation in
@@ -107,6 +127,7 @@ struct MemberController {
                     .with(\.$timeslot)
                     .with(\.$location)
             }
+            .filter(\.$user.$id, .equal, memberId)
             .all()
             .flatMapThrowing { reservations in
                 let reservationResponses = try reservations.map { reservation in
@@ -130,27 +151,53 @@ struct MemberController {
             }
     }
 
-
     func makeReservation(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         let reservationDTO = try req.content.decode(ReservationDTO.self)
 
-        guard let userId: UUID = reservationDTO.userId else { throw Abort(.badRequest)}
+        guard let userId: UUID = reservationDTO.userId,
+              let timeslotLocationId: UUID = reservationDTO.timeslotLocationId else {
+            throw Abort(.badRequest)
+        }
 
-        return TimeslotLocation.find(reservationDTO.timeslotLocationId, on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { timeslotLocation in
-                let reservation = Reservation(
-                    userID: userId,
-                    timeslotLocationID: timeslotLocation.id!
-                )
+        return TimeslotLocation.query(on: req.db)
+            .filter(\TimeslotLocation.$id, .equal, timeslotLocationId)
+            .with(\.$location)
+            .with(\.$timeslot)
+            .first()
+            .flatMap { timeslotLocation -> EventLoopFuture<Void> in
+                guard let timeslotLocation = timeslotLocation else {
+                    return req.eventLoop.makeFailedFuture(Abort(.notFound))
+                }
 
-                return reservation.save(on: req.db)
-                    .flatMap {
-                        timeslotLocation.currentCapacity += 1
-                        return timeslotLocation.save(on: req.db)
+                guard timeslotLocation.currentCapacity < timeslotLocation.location.capacity else {
+                    let errorReason = "Timeslot location is full"
+                    return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: errorReason))
+                }
+
+                return Subscription.query(on: req.db)
+                    .filter(\.$member.$id, .equal, userId)
+                    .filter(\.$validFrom, .lessThanOrEqual, timeslotLocation.timeslot.startTime)
+                    .filter(\.$validUntil, .greaterThanOrEqual, timeslotLocation.timeslot.endTime)
+                    .filter(\.$approved, .equal, true)
+                    .first()
+                    .flatMap { subscription -> EventLoopFuture<Void> in
+                        guard subscription != nil else {
+                            let errorReason = "User does not have a valid subscription for the timeslot"
+                            return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: errorReason))
+                        }
+
+                        let reservation = Reservation(
+                            userID: userId,
+                            timeslotLocationID: timeslotLocation.id!
+                        )
+
+                        return reservation.save(on: req.db).flatMap {
+                            timeslotLocation.currentCapacity += 1
+                            return timeslotLocation.save(on: req.db).transform(to: ())
+                        }
                     }
-                    .transform(to: .created)
             }
+            .transform(to: .created)
     }
 
     func deleteReservation(req: Request) throws -> EventLoopFuture<HTTPStatus> {

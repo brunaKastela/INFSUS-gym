@@ -171,8 +171,8 @@ extension DatabaseSetup {
                 )
                 let userCreationFuture = user.create(on: database)
                 userCreationFutures.append(userCreationFuture)
-                self.createRandomReservations(using: database)
-                self.createRandomSubscriptions(using: database)
+//                self.createRandomReservations(using: database)
+//                self.createRandomSubscriptions(using: database)
             } catch {
                 print("Error creating user: \(error)")
             }
@@ -192,7 +192,9 @@ extension DatabaseSetup {
 
                     for user in users {
                         if let timeslotLocation = timeslotLocations.randomElement() {
-                            let reservation = Reservation(userID: try! user.requireID(), timeslotLocationID: try! timeslotLocation.requireID())
+                            let reservation = Reservation(
+                                userID: try! user.requireID(),
+                                timeslotLocationID: try! timeslotLocation.requireID())
                             reservationCreationFutures.append(reservation.create(on: database))
                         }
                     }

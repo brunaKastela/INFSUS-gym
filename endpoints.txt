@@ -280,52 +280,30 @@ ENDPOINTS
         "currentCapacity": 0
     }]
 
-Dalje nije updateano
-=========================================================================================
-
-    - GET http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC/2024-05-28T00:00:00Z
-    - timeslots of location on a date
-    - [{
-        "location": {
-            "address": "Heinzlova 47",
-            "description": "Modern gym space",
-            "closing": 19,
-            "id": "DC76CD32-19FB-4ABF-A21F-26829F25ADAC",
-            "opening": 11,
-            "phoneNumber": "0996578393",
-            "email": "infoHeinzlovaGym@gmail.com",
-            "capacity": 50
-        },
-        "id": "AE8B4514-E4F7-47BE-87A5-66FE91E1BC3E",  -- ovaj se id salje za rezervaciju termina
-        "timeslot": {
-            "id": "52846780-5D6E-4EB3-81B1-CA493004A543",
-            "startTime": "2024-05-28T16:00:00Z",
-            "endTime": "2024-05-28T17:00:00Z"
-        },
-        "currentCapacity": 0
-    }]
-
     -GET http://127.0.0.1:8080/gym/locations/reservations/:USERID
     -ODGOVOR [{
-        "userId": "622BBA7E-14F7-4989-AC8E-B5D8242018EE",
-        "reservationId": "AAD95199-81DB-4883-92AF-ECF714D48113",
         "timeslot": {
-            "id": "CDDD59FD-C26A-4679-8A4C-AF80734B3E08",
-            "location": {
-                "phoneNumber": "0996543382",
-                "id": "5D1CE734-59C6-4DDF-82A4-8F1887D46175",
-                "email": "infoOdranskaGym@gmail.com",
-                "closing": 19,
-                "capacity": 25,
-                "address": "Odranska 8",
-                "description": "Cozy in the downtown area",
-                "opening": 11
-            },
-            "currentCapacity": 0,
+            "currentCapacity": 1,
             "timeslot": {
-                "startTime": "2024-06-18T07:00:00Z",
-                "endTime": "2024-06-18T08:00:00Z",
-                "id": "604B29E4-C928-42EF-9B66-661CBEFADA5C"
-            }
-        }
+                "id": "E8E728B4-54FC-446D-B19E-73D0162082D6",
+                "endTime": "2024-05-29T11:00:00Z",
+                "startTime": "2024-05-29T10:00:00Z"
+            },
+            "location": {
+                "phoneNumber": "0996578393",
+                "closing": 19,
+                "email": "infoHeinzlovaGym@gmail.com",
+                "id": "DC76CD32-19FB-4ABF-A21F-26829F25ADAC",
+                "address": "Heinzlova 47",
+                "capacity": 50,
+                "opening": 11,
+                "description": "Modern gym space"
+            },
+            "id": "8236F585-6F84-44E2-993F-595B4F85093E"
+        },
+        "userId": "C6B58047-25C7-426F-95CD-A78FEB57ACE5",
+        "reservationId": "EBD36E37-5E19-4FC7-9D84-E638815551F8"
     }]
+
+    - DELETE http://127.0.0.1:8080/gym/reservations/c6b58047-25c7-426f-95cd-a78feb57ace5
+    - ODGOVOR http status

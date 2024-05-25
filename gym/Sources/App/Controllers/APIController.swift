@@ -39,8 +39,11 @@ struct APIController: RouteCollection {
         gymLocation.get(use: gymController.getLocations)
         gymLocation.get(":id", use: gymController.getLocation)
         gymLocation.get(":id", ":date", use: gymController.getTimeslotLocation)
-        gymLocation.get("reservations", ":userId", use: memberController.getReservations)
-        gymLocation.post("reservation", use: memberController.makeReservation)
-        gymLocation.delete("reservation", ":reservationId", use: memberController.deleteReservation)
+
+        let gymReservations = routes.grouped("gym", "reservations")
+
+        gymReservations.get(":memberId", use: memberController.getReservations)
+        gymReservations.post(use: memberController.makeReservation)
+        gymReservations.delete(":reservationId", use: memberController.deleteReservation)
     }
 }
