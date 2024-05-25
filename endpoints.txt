@@ -175,3 +175,28 @@ ENDPOINTS
         },
         "currentCapacity": 0
     }]
+
+    -GET http://127.0.0.1:8080/gym/locations/reservations/:USERID
+    -ODGOVOR [{
+        "userId": "622BBA7E-14F7-4989-AC8E-B5D8242018EE",
+        "reservationId": "AAD95199-81DB-4883-92AF-ECF714D48113",
+        "timeslot": {
+            "id": "CDDD59FD-C26A-4679-8A4C-AF80734B3E08",
+            "location": {
+                "phoneNumber": "0996543382",
+                "id": "5D1CE734-59C6-4DDF-82A4-8F1887D46175",
+                "email": "infoOdranskaGym@gmail.com",
+                "closing": 19,
+                "capacity": 25,
+                "address": "Odranska 8",
+                "description": "Cozy in the downtown area",
+                "opening": 11
+            },
+            "currentCapacity": 0,
+            "timeslot": {
+                "startTime": "2024-06-18T07:00:00Z",
+                "endTime": "2024-06-18T08:00:00Z",
+                "id": "604B29E4-C928-42EF-9B66-661CBEFADA5C"
+            }
+        }
+    }]

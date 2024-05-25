@@ -31,6 +31,9 @@ struct APIController: RouteCollection {
         gymLocation.get(use: getLocations)
         gymLocation.get(":id", use: getLocation)
         gymLocation.get(":id", ":date", use: getTimeslotLocation)
+        gymLocation.get("reservations", ":userId", use: getReservations)
+        gymLocation.post("reservation", use: makeReservation)
+        gymLocation.delete("reservation", ":reservationId", use: deleteReservation)
     }
 }
 
@@ -106,6 +109,83 @@ extension APIController {
                                 )
                             }
                         }.flatten(on: req.eventLoop)
+                    }
+            }
+    }
+
+    func getReservations(req: Request) throws -> EventLoopFuture<[ReservationResponse]> {
+        return Reservation.query(on: req.db)
+            .with(\.$user)
+            .with(\.$timeslotLocation) { timeslotLocation in
+                timeslotLocation
+                    .with(\.$timeslot)
+                    .with(\.$location)
+            }
+            .all()
+            .flatMapThrowing { reservations in
+                let reservationResponses = try reservations.map { reservation in
+                    guard let userId = reservation.user.id,
+                          let reservationId = reservation.id else {
+                        throw Abort(.internalServerError)
+                    }
+
+                    return ReservationResponse(
+                        userId: userId,
+                        reservationId: reservationId,
+                        timeslot: TimeslotResponse(
+                            id:  reservation.timeslotLocation.id,
+                            location: reservation.timeslotLocation.location,
+                            timeslot: reservation.timeslotLocation.timeslot,
+                            currentCapacity: reservation.timeslotLocation.currentCapacity
+                        )
+                    )
+                }
+                return reservationResponses
+            }
+    }
+
+
+    func makeReservation(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let reservationDTO = try req.content.decode(ReservationDTO.self)
+
+        guard let userId: UUID = reservationDTO.userId else { throw Abort(.badRequest)}
+
+        return TimeslotLocation.find(reservationDTO.timeslotLocationId, on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { timeslotLocation in
+                let reservation = Reservation(
+                    userID: userId,
+                    timeslotLocationID: timeslotLocation.id!
+                )
+
+                return reservation.save(on: req.db)
+                    .flatMap {
+                        timeslotLocation.currentCapacity += 1
+                        return timeslotLocation.save(on: req.db)
+                    }
+                    .transform(to: .created)
+            }
+    }
+
+    func deleteReservation(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        guard let reservationId = req.parameters.get("reservationId", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+
+        return Reservation.find(reservationId, on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { reservation in
+                let timeslotLocationId = reservation.$timeslotLocation.id
+
+                return TimeslotLocation.find(timeslotLocationId, on: req.db)
+                    .unwrap(or: Abort(.notFound))
+                    .flatMap { timeslotLocation in
+                        timeslotLocation.currentCapacity -= 1
+                        return timeslotLocation.save(on: req.db)
+                            .flatMap {
+                                reservation.delete(on: req.db)
+                                    .transform(to: .noContent)
+                            }
                     }
             }
     }
@@ -193,7 +273,6 @@ extension APIController {
                         subscriptionTypeId: subscription.id!
                     )
 
-                    // Save the new subscription and transform the result to an appropriate HTTPStatus
                     return newSubscription.save(on: req.db)
                         .transform(to: .ok)
                 }
