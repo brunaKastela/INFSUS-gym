@@ -3,91 +3,36 @@ import axios from 'axios';
 import './Members.css'; 
 
 const MembersPage = ({ userRole }) => {
-    console.log(userRole)
-  const [members, setMembers] = useState([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      subscription: {
-        approved: false,
-        membership: {
-          title: 'Basic',
-          price: 20
-        },
-        type: {
-          title: 'monthly'
-        }
-      },
-      approved: false,
-      delete: false
-    },
-    {
-      id: '2',
-      name: 'Jane Doe',
-      email: 'jane.doe@example.com',
-      subscription: {
-        approved: true,
-        membership: {
-          title: 'Premium',
-          price: 50
-        },
-        type: {
-          title: 'yearly'
-        }
-      },
-      approved: true,
-      delete: false
-    },
-    {
-      id: '3',
-      name: 'Bob Smith',
-      email: 'bob.smith@example.com',
-      subscription: {
-        approved: false,
-        membership: {
-          title: 'Basic',
-          price: 20
-        },
-        type: {
-          title: 'monthly'
-        }
-      },
-      approved: false,
-      delete: false
-    }
-  ]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // const [members, setMembers] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://infsus-project-gym.fly.dev/gym/admin/users');
+        setMembers(response.data);
+      } catch (error) {
+        console.error('Error fetching members:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('http://127.0.0.1:8080/gym/admin/users');
-  //       setMembers(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching members:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+    fetchData();
+  }, []);
 
-  //   fetchData();
-  // }, []);
-
-  const handleApproveProfile = async (memberId) => {
-    try {
-      await axios.put(`http://127.0.0.1:8080/gym/admin/users/${memberId}`);
-      setMembers((prevMembers) =>
-        prevMembers.map((member) =>
-          member.id === memberId ? { ...member, approved: true } : member
-        )
-      );
-    } catch (error) {
-      console.error('Error approving profile:', error);
-    }
-  };
+  // const handleApproveProfile = async (memberId) => {
+  //   try {
+  //     await axios.put(`http://127.0.0.1:8080/gym/admin/users/${memberId}`);
+  //     setMembers((prevMembers) =>
+  //       prevMembers.map((member) =>
+  //         member.id === memberId ? { ...member, approved: true } : member
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error('Error approving profile:', error);
+  //   }
+  // };
 
   const handleApproveSubscription = async (memberId) => {
     try {
@@ -108,7 +53,7 @@ const MembersPage = ({ userRole }) => {
 
   const handleDeleteProfile = async (memberId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8080/gym/admin/users/${memberId}`);
+      await axios.delete(`https://infsus-project-gym.fly.dev/gym/admin/users/${memberId}`);
       setMembers((prevMembers) => prevMembers.filter((member) => member.id !== memberId));
     } catch (error) {
       console.error('Error deleting profile:', error);
@@ -121,14 +66,14 @@ const MembersPage = ({ userRole }) => {
 
   return (
     <div className="members-page">
-      <h1>Members</h1>
+      <h1>Članovi</h1>
       <table>
         <thead>
           <tr>
             <th>Ime</th>
             <th>Email</th>
-            <th>Članarina</th>
-            <th>Odobri profil</th>
+            {/* <th>Članarina</th> */}
+            {/* <th>Odobri profil</th> */}
             {userRole === 'employee' && <th>Odobri članarinu</th>}
             {userRole === 'admin' && <th>Obriši profil</th>}
           </tr>
@@ -138,16 +83,16 @@ const MembersPage = ({ userRole }) => {
             <tr key={member.id}>
               <td>{member.name} {member.surname}</td>
               <td>{member.email}</td>
-              <td className={member.subscription.approved ? 'approved' : 'pending'}>
+              {/* <td className={member.subscription.approved ? 'approved' : 'pending'}>
                 {member.subscription.approved ? 'Odobren' : 'Neriješen'}
-              </td>
-              <td>
+              </td> */}
+              {/* <td>
                 {member.approved ? (
                   <div className="approved">Odobren</div>
                 ) : (
                   <button onClick={() => handleApproveProfile(member.id)}>Odobri</button>
                 )}
-              </td>
+              </td> */}
               {userRole === 'employee' && <td>
                 {member.subscriptionApproved ? (
                   <div className="approved">Odobren</div>

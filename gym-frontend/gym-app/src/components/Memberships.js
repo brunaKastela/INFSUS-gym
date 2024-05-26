@@ -3,49 +3,21 @@ import axios from 'axios';
 import './Memberships.css';
 
 const MembershipsPage = ({userRole}) => {
-    const [memberships, setMemberships] = useState([
-        {
-          id: '1',
-          title: 'Basic',
-          description: 'Access to gym facilities',
-          weeklyPrice: 10,
-          monthlyPrice: 30,
-          yearlyPrice: 300,
-          approved: false,
-        },
-        {
-          id: '2',
-          title: 'Premium',
-          description: 'Access to all facilities and classes',
-          weeklyPrice: 20,
-          monthlyPrice: 60,
-          yearlyPrice: 600,
-          approved: true,
-        },
-        {
-          id: '3',
-          title: 'VIP',
-          description: 'All-access pass with personal training',
-          weeklyPrice: 30,
-          monthlyPrice: 90,
-          yearlyPrice: 900,
-          approved: false,
-        },
-      ]);
-//   const [memberships, setMemberships] = useState([]);
+  const [memberships, setMemberships] = useState([]);
 
-//   useEffect(() => {
-//     const fetchMemberships = async () => {
-//       try {
-//         const response = await axios.get('https://infsus-project-gym.fly.dev/gym/memberships');
-//         setMemberships(response.data);
-//       } catch (error) {
-//         console.error('Error fetching memberships:', error);
-//       }
-//     };
+  useEffect(() => {
+    const fetchMemberships = async () => {
+      try {
+        const response = await axios.get('https://infsus-project-gym.fly.dev/gym/memberships');
+        setMemberships(response.data);
+        
+      } catch (error) {
+        console.error('Error fetching memberships:', error);
+      }
+    };
 
-//     fetchMemberships();
-//   }, []);
+    fetchMemberships();
+  }, []);
 
   const [showForm, setShowForm] = useState(false);
   const [newMembership, setNewMembership] = useState({

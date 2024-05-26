@@ -9,6 +9,8 @@ import Memberships from './components/Memberships'
 import NotFound from './components/NotFound'
 import Profile from './components/Profile'
 import Reservations from './components/Reservations'
+import Login from './components/Login'
+import Register from './components/SignUp'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -20,10 +22,12 @@ function App() {
         <Navbar isLoggedIn={isLoggedIn} userRole={userRole} setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} /> {/* Include the Navbar component */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/members" element={<Members userRole={userRole}/>} />
+          <Route path="/users" element={<Members userRole={userRole}/>} />
           <Route path="/services" element={<Memberships userRole={userRole}/>} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/reservations" element={<Reservations />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
           <Route path="*" element={<NotFound />} /> {/* Handle not found routes */}
         </Routes>
       </BrowserRouter>
