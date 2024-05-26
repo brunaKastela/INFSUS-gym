@@ -4,9 +4,9 @@ import './Memberships.css';
 
 const MembershipsPage = ({ userRole, userId }) => {
   const [memberships, setMemberships] = useState([]);
-  const [selectedMembership, setSelectedMembership] = useState(null);
   const [membershipTypes, setMembershipTypes] = useState([]);
   const [userSubscription, setUserSubscription] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const fetchMemberships = async () => {
     try {
@@ -30,7 +30,6 @@ const MembershipsPage = ({ userRole, userId }) => {
     try {
       const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/memberships/subscriptions/${userId}`);
       setUserSubscription(response.data);
-      console.log(response.data)
     } catch (error) {
       console.error('Error fetching subscriptions:', error);
     }
@@ -52,10 +51,13 @@ const MembershipsPage = ({ userRole, userId }) => {
       };
       const response = await axios.post('https://infsus-project-gym.fly.dev/gym/memberships', postData);
       await fetchSubscriptions();
-    } catch (e) {
-      console.error('Error selecting membership:', e);
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        setErrorMessage('Već postoji odobrena pretplata koja pokriva ovaj vremenski period.');
+      } else {
+        console.error('Error selecting membership:', error);
+      }
     }
-    setSelectedMembership({ id: membershipId, type });
   };
 
   const handleEdit = (membershipId) => {
@@ -88,7 +90,7 @@ const MembershipsPage = ({ userRole, userId }) => {
             <th>Tjedna cijena</th>
             <th>Mjesečna cijena</th>
             <th>Godišnja cijena</th>
-            {userRole === 'admin' && <th></th>}
+            {/* {userRole === 'admin' && <th></th>} */}
           </tr>
         </thead>
         <tbody>
@@ -117,44 +119,43 @@ const MembershipsPage = ({ userRole, userId }) => {
                   <button className='action-btn choose-btn' onClick={() => handleSelect(membership.id, 'yearly')}>Odaberi</button>
                 )}
               </td>
-              {userRole === 'admin' && 
-              <td> (
+              {/* {userRole === 'admin' && 
+              <td>
                   <>
                     <button className='action-btn' onClick={() => handleEdit(membership.id)}>Uredi</button>
                     <button className='action-btn' onClick={() => handleDelete(membership.id)}>Obriši</button>
                   </>
-                )
-              </td>}
+              </td>} */}
             </tr>
           ))}
         </tbody>
       </table>
-      {userRole === 'admin' && <button className="add-new-btn action-btn" onClick={handleAddNew}>Dodaj članarinu</button>}
-      <h2>Vaše pretplate</h2>
-      <table className="subscriptions-table">
-  <thead>
-    <tr>
-      <th>Tip</th>
-      <th>Vrijedi od</th>
-      <th>Vrijedi do</th>
-      <th>Naziv</th>
-      <th>Odobrena</th>
-    </tr>
-  </thead>
-  <tbody>
-    {userSubscription.map((subscription) => (
-      <tr key={subscription.subscriptionId}>
-        <td>{subscription.subscriptionType.title === 'weekly' ? 'Tjedna' 
-        : subscription.subscriptionType.title === 'monthly' ? 'Mjesečna' : 'Godišnja'}</td>
-        <td>{new Date(subscription.validFrom).toLocaleDateString()}</td>
-        <td>{new Date(subscription.validUntil).toLocaleDateString()}</td>
-        <td>{subscription.membership.title}</td>
-        <td>{subscription.approved ? 'Yes' : 'No'}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
+      {/* {userRole === 'admin' && <button className="add-new-btn action-btn" onClick={handleAddNew}>Dodaj članarinu</button>} */}
+      {userRole === 'member' && <h2>Vaše pretplate</h2>}
+      {userRole === 'member' && <table className="subscriptions-table">
+        <thead>
+          <tr>
+            <th>Tip</th>
+            <th>Vrijedi od</th>
+            <th>Vrijedi do</th>
+            <th>Naziv</th>
+            <th>Odobrena</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userSubscription.map((subscription) => (
+            <tr key={subscription.subscriptionId}>
+              <td>{subscription.subscriptionType.title === 'weekly' ? 'Tjedna' 
+              : subscription.subscriptionType.title === 'monthly' ? 'Mjesečna' : 'Godišnja'}</td>
+              <td>{new Date(subscription.validFrom).toLocaleDateString()}</td>
+              <td>{new Date(subscription.validUntil).toLocaleDateString()}</td>
+              <td>{subscription.membership.title}</td>
+              <td>{subscription.approved ? 'Da' : 'Ne'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };

@@ -24,8 +24,6 @@ const LoginPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
       const userData = response.data;
       setIsLoggedIn(true);
       setUserRole(userData.userTypeName);
-      console.log('ID')
-      console.log(userData.id);
       setUserId(userData.id);
       navigate('/'); 
     } catch (error) {
