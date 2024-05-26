@@ -18,7 +18,8 @@ li {
     padding: 10px;
 }
 
-a, button {
+a,
+button {
     color: #1d3124;
     text-decoration: none;
     font-size: large;
@@ -27,6 +28,7 @@ a, button {
     cursor: pointer;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
     background-color: #a9b0a1;
 }

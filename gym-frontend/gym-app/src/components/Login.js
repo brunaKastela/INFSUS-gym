@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom'; // Import useHistory
+import { Link, useNavigate } from 'react-router-dom'; 
 import './Login.css';
 
 const LoginPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
@@ -12,11 +12,10 @@ const LoginPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setErrorMessage('Please fill in all fields.'); // Set error message if fields are empty
+      setErrorMessage('Please fill in all fields.'); 
       return;
     }
     try {
-      // todo: uncomment
       const response = await axios.post('https://infsus-project-gym.fly.dev/gym/account/login', {
         email,
         password

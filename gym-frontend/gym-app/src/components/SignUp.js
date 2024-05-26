@@ -34,7 +34,6 @@ const SignupPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
       setUserRole(userData.userTypeName);
       setUserId(userData.id);
       navigate('/');
-      // Handle successful signup, such as showing a success message or redirecting to login page
     } catch (error) {
       console.error('Error signing up:', error);
     }

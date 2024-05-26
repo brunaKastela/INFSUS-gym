@@ -57,7 +57,8 @@ const ReservationsPage = ({ userId }) => {
 
     try {
       const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/locations/${selectedLocation}/${selectedDate}`);
-      setTimeslots(response.data);
+      const filteredTimeslots = response.data.filter(timeslot => timeslot.currentCapacity < timeslot.location.capacity);
+      setTimeslots(filteredTimeslots);
     } catch (error) {
       console.error('Error fetching timeslots:', error);
     }
@@ -142,7 +143,8 @@ const ReservationsPage = ({ userId }) => {
           <h3>Dostupni termini</h3>
           <select onChange={(e) => handleSelectTimeslot(e.target.value)}>
             <option value="">Odaberite termin</option>
-            {timeslots.map((timeslot) => (
+            {timeslots
+            .map((timeslot) => (
               <option key={timeslot.id} value={timeslot.id}>
                 {new Date(timeslot.timeslot.startTime).toLocaleString()} - {new Date(timeslot.timeslot.endTime).toLocaleString()}
               </option>

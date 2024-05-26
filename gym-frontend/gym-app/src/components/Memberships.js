@@ -60,25 +60,6 @@ const MembershipsPage = ({ userRole, userId }) => {
     }
   };
 
-  const handleEdit = (membershipId) => {
-    // Add your edit logic here
-    console.log('Edit membership:', membershipId);
-  };
-
-  const handleDelete = async (membershipId) => {
-    try {
-      await axios.delete(`https://infsus-project-gym.fly.dev/gym/memberships/${membershipId}`);
-      setMemberships(memberships.filter((membership) => membership.id !== membershipId));
-    } catch (error) {
-      console.error('Error deleting membership:', error);
-    }
-  };
-
-  const handleAddNew = () => {
-    // Add your logic to show the form for adding new membership
-    console.log('Add new membership');
-  };
-
   return (
     <div className="memberships-page">
       <h1>Članarine</h1>

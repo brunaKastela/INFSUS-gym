@@ -79,7 +79,6 @@ const MembersPage = ({ userRole }) => {
         <tbody>
           {members.map(
             (member) =>
-              // Only render rows for unapproved subscriptions
               ((!member.approved && userRole === "employee") ||
                 userRole === "admin") && (
                 <tr

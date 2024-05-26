@@ -6,8 +6,6 @@ const Navbar = ({ isLoggedIn, userRole, setIsLoggedIn, setUserRole, setUserId })
     console.log(userRole)
   const handleLogin = () => {
     navigate('/login')
-    // setIsLoggedIn(true);
-    // setUserRole('member');
   };
 
   const navigate = useNavigate();
