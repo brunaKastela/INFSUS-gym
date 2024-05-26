@@ -15,20 +15,21 @@ import Register from './components/SignUp'
 function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [userRole, setUserRole] = React.useState("guest");
+  const [userId, setUserId] = React.useState(null);
   
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar isLoggedIn={isLoggedIn} userRole={userRole} setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} /> {/* Include the Navbar component */}
+        <Navbar isLoggedIn={isLoggedIn} userRole={userRole} setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} setUserId={setUserId}/> 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<Members userRole={userRole}/>} />
-          <Route path="/services" element={<Memberships userRole={userRole}/>} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/reservations" element={<Reservations />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="*" element={<NotFound />} /> {/* Handle not found routes */}
+          <Route path="/services" element={<Memberships userRole={userRole} userId={userId}/>} />
+          <Route path="/profile" element={<Profile userId={userId}/>} />
+          <Route path="/reservations" element={<Reservations userId={userId}/>} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} setUserId={setUserId}/>} />
+          <Route path="/signup" element={<Register setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} setUserId={setUserId}/>} />
+          <Route path="*" element={<NotFound />} /> 
         </Routes>
       </BrowserRouter>
     </div>

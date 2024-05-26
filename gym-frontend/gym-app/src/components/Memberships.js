@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Memberships.css';
 
-const MembershipsPage = ({userRole}) => {
+const MembershipsPage = ({userRole, userId}) => {
   const [memberships, setMemberships] = useState([]);
 
   useEffect(() => {

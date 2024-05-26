@@ -1,27 +1,40 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useHistory
 import './Login.css';
 
-const LoginPage = ({ setIsLoggedIn, setUserRole }) => {
+const LoginPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate(); 
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setErrorMessage('Please fill in all fields.'); // Set error message if fields are empty
+      return;
+    }
     try {
+      // todo: uncomment
       const response = await axios.post('https://infsus-project-gym.fly.dev/gym/account/login', {
         email,
         password
       });
-      // Set user data and login status
       const userData = response.data;
       setIsLoggedIn(true);
       setUserRole(userData.userTypeName);
-      // Redirect to home page or any other page after login
-      // You can use useHistory from 'react-router-dom' for redirection
+      console.log('ID')
+      console.log(userData.id);
+      setUserId(userData.id);
+      navigate('/'); 
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setErrorMessage('Invalid email or password.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again later.');
+      }
       console.error('Error logging in:', error);
-      // Handle login error
     }
   };
 
@@ -38,8 +51,9 @@ const LoginPage = ({ setIsLoggedIn, setUserRole }) => {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
         <button type="submit">Login</button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
-      <p className="signup-link">Nemate račun? <Link to="/signup">Registrirajte se</Link></p> 
+      <p className="signup-link">Nemate račun? <Link to="/signup">Registrirajte se</Link></p>
     </div>
   );
 };

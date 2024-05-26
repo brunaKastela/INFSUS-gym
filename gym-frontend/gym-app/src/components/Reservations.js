@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Reservations.css';
 
-const ReservationsPage = () => {
+const ReservationsPage = ({userId}) => {
 //   const [reservations, setReservations] = useState([]);
 //   const [timeslots, setTimeslots] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-  const userId = 'C6B58047-25C7-426F-95CD-A78FEB57ACE5'; // Replace with the actual user ID
 
   const dummyReservations = [
     {

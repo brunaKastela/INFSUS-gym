@@ -2,44 +2,44 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 
-const ProfilePage = () => {
-//   const [profile, setProfile] = useState({
-//     name: '',
-//     surname: '',
-//     phoneNumber: '',
-//     dateOfBirth: '',
-//     email: '',
-//     userTypeId: '',
-//     userTypeName: ''
-//   });
-//   const [isEditing, setIsEditing] = useState(false);
-  const [userId, setUserId] = useState('6B0E6BDF-6F14-48C7-B523-F4155849FFFD'); // replace with actual user ID
+const ProfilePage = ({userId}) => {
+  console.log(userId)
+  const [profile, setProfile] = useState({
+    name: '',
+    surname: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    email: '',
+    userTypeId: '',
+    userTypeName: ''
+  });
+  const [isEditing, setIsEditing] = useState(false);
 
-//   useEffect(() => {
-//     const fetchProfile = async () => {
-//       try {
-//         const response = await axios.get(`http://127.0.0.1:8080/gym/admin/members/${userId}`);
-//         setProfile(response.data);
-//       } catch (error) {
-//         console.error('Error fetching profile:', error);
-//       }
-//     };
-
-//     fetchProfile();
-//   }, [userId]);
-
-    const dummyProfile = {
-        name: 'Mia',
-        surname: 'Lovric',
-        phoneNumber: '0996571382',
-        dateOfBirth: '2004-05-25',
-        email: 'mia@example.com',
-        userTypeId: '26519AEA-35B9-49A3-8E56-FCBB370E617D',
-        userTypeName: 'employee'
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`);
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
     };
 
-    const [profile, setProfile] = useState(dummyProfile);
-    const [isEditing, setIsEditing] = useState(false);
+    fetchProfile();
+  }, [userId]);
+
+    // const dummyProfile = {
+    //     name: 'Mia',
+    //     surname: 'Lovric',
+    //     phoneNumber: '0996571382',
+    //     dateOfBirth: '2004-05-25',
+    //     email: 'mia@example.com',
+    //     userTypeId: '26519AEA-35B9-49A3-8E56-FCBB370E617D',
+    //     userTypeName: 'employee'
+    // };
+
+    // const [profile, setProfile] = useState(dummyProfile);
+    // const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

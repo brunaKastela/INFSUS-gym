@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css'
 
-const Navbar = ({ isLoggedIn, userRole, setIsLoggedIn, setUserRole }) => {
+const Navbar = ({ isLoggedIn, userRole, setIsLoggedIn, setUserRole, setUserId }) => {
     console.log(userRole)
   const handleLogin = () => {
     navigate('/login')
@@ -16,6 +16,7 @@ const Navbar = ({ isLoggedIn, userRole, setIsLoggedIn, setUserRole }) => {
     setIsLoggedIn(false);
     setUserRole('guest');
     navigate('/')
+    setUserId(null);
   };
 
   return (
