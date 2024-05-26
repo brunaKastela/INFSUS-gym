@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-struct GymController {
+struct Gym {
 
     func getLocations(req: Request) throws -> EventLoopFuture<[Location]> {
         Location.query(on: req.db).all()

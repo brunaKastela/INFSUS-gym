@@ -4,46 +4,44 @@ import Vapor
 struct APIController: RouteCollection {
 
     func boot(routes: Vapor.RoutesBuilder) throws {
-        let userController: UserController = .init()
-        let accountController: AccountController = .init()
-        let memberController: MemberController = .init()
-        let employeeController: EmployeeController = .init()
-        let gymController: GymController = .init()
+        let account: Account = .init()
+        let member: Member = .init()
+        let employee: Employee = .init()
+        let gym: Gym = .init()
 
         let gymAccount = routes.grouped("gym", "account")
 
-        gymAccount.post("createAccount", use: accountController.addUser)
-        gymAccount.get(":userId", use: accountController.getUser)
-        gymAccount.post("login", use: accountController.login)
+        gymAccount.post("createAccount", use: account.addUser)
+        gymAccount.get(":userId", use: account.getUser)
+        gymAccount.post("login", use: account.login)
 
         let gymAdmin = routes.grouped("gym", "admin", "users")
 
-        gymAdmin.get(use: userController.users)
-        gymAdmin.post(use: userController.addUser)
-        gymAdmin.get(":userId", use: userController.getUser)
-        gymAdmin.put(use: userController.updateUser)
-        gymAdmin.delete(":userId", use: userController.deleteUser)
+        gymAdmin.get(use: account.getUsers)
+        gymAdmin.post(use: account.addUser)
+        gymAdmin.get(":userId", use: account.getUser)
+        gymAdmin.put(use: account.updateUser)
+        gymAdmin.delete(":userId", use: account.deleteUser)
 
         let gymMemberships = routes.grouped("gym", "memberships")
-        gymMemberships.get(use: memberController.getMemberships)
-        gymMemberships.get("types", use: memberController.getSubscriptionTypes)
-        gymMemberships.post(use: memberController.subscribeToMembership)
-        gymMemberships.get("subscriptions",":memberId", use: memberController.getSubscriptions)
+        gymMemberships.get(use: member.getMemberships)
+        gymMemberships.get("types", use: member.getSubscriptionTypes)
+        gymMemberships.post(use: member.subscribeToMembership)
+        gymMemberships.get("subscriptions",":memberId", use: member.getSubscriptions)
 
         let gymEmployee = routes.grouped("gym", "employee")
-        gymEmployee.get("members", use: employeeController.getMembers)
-        gymEmployee.get("members", "subscriptions", use: employeeController.getSubscriptions)
-        gymEmployee.post("members", "approveSubsctiption", ":subscriptionId", use: employeeController.approveSubscription)
+        gymEmployee.get("members", use: employee.getMembers)
+        gymEmployee.get("members", "subscriptions", use: employee.getSubscriptions)
+        gymEmployee.post("members", "approveSubsctiption", ":subscriptionId", use: employee.approveSubscription)
 
         let gymLocation = routes.grouped("gym", "locations")
-        gymLocation.get(use: gymController.getLocations)
-        gymLocation.get(":id", use: gymController.getLocation)
-        gymLocation.get(":id", ":date", use: gymController.getTimeslotLocation)
+        gymLocation.get(use: gym.getLocations)
+        gymLocation.get(":id", use: gym.getLocation)
+        gymLocation.get(":id", ":date", use: gym.getTimeslotLocation)
 
         let gymReservations = routes.grouped("gym", "reservations")
-
-        gymReservations.get(":memberId", use: memberController.getReservations)
-        gymReservations.post(use: memberController.makeReservation)
-        gymReservations.delete(":reservationId", use: memberController.deleteReservation)
+        gymReservations.get(":memberId", use: member.getReservations)
+        gymReservations.post(use: member.makeReservation)
+        gymReservations.delete(":reservationId", use: member.deleteReservation)
     }
 }

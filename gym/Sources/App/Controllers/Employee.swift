@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-struct EmployeeController {
+struct Employee {
 
     func getMembers(req: Request) throws -> EventLoopFuture<[UserSafeDTO]> {
         User.query(on: req.db)

@@ -47,21 +47,6 @@ final class IntegrationTests: XCTestCase {
         })
     }
 
-//    func testSubscribeKnownUserToMembership() async throws {
-//        try setUpWithError()
-//        DatabaseSetup().setUpDatabase(using: app.db)
-//
-//        let subscriptionDTO = SubscriptionDTO(
-//            userId: userId,
-//            membershipId: membershipId,
-//            subscriptionTypeId: subscriptionTypeId)
-//        try app.test(.POST, "/gym/memberships", beforeRequest: { req in
-//            try req.content.encode(subscriptionDTO)
-//        }, afterResponse: { res in
-//            XCTAssertEqual(res.status, .ok)
-//        })
-//    }
-
     func createUser() throws -> EventLoopFuture<UUID> {
         let date = Date()
         let calendar = Calendar.current

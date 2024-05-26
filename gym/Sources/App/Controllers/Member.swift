@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-struct MemberController {
+struct Member {
 
     func getSubscriptions(req: Request) throws -> EventLoopFuture<[SubscriptionResponseDTO]> {
         guard let memberId = req.parameters.get("memberId", as: UUID.self) else {
