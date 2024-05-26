@@ -11,6 +11,7 @@ const ReservationsPage = ({ userId }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedTimeSlot, setselectedTimeSlot] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const fetchReservations = async () => {
     try {
@@ -78,7 +79,11 @@ const ReservationsPage = ({ userId }) => {
       setShowDatePicker(false);
       fetchReservations();
     } catch (error) {
-      console.error('Error making reservation:', error);
+      if (error.response && error.response.status === 400) {
+        setErrorMessage('Ne možete rezervirati termin, nemate odobrenu pretplatu.');
+      } else {
+        console.error('Error making reservation:', error);
+      }
     }
   };
 
@@ -153,6 +158,7 @@ const ReservationsPage = ({ userId }) => {
           <button className="reserve-button" onClick={() => makeReservation()} disabled={selectedTimeSlot == null || selectedTimeSlot === ''}>Rezerviraj termin</button>
         </div>
       )}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };

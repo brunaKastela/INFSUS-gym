@@ -28,7 +28,7 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} userRole={userRole}/>} />
           <Route path="/users" element={checkLogin() ? <Members userRole={userRole}/> : <Navigate to="/login" />} />
           <Route path="/services" element={checkLogin() ? <Memberships userRole={userRole} userId={userId}/> : <Navigate to="/login" />} />
-          <Route path="/profile" element={checkLogin() ? <Profile userId={userId}/> : <Navigate to="/login" />} />
+          <Route path="/profile" element={checkLogin() ? <Profile userId={userId} setIsLoggedIn={setIsLoggedIn}/> : <Navigate to="/login" />} />
           <Route path="/reservations" element={checkLogin() ? <Reservations userId={userId}/> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} setUserId={setUserId}/>} />
           <Route path="/signup" element={<Register setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} setUserId={setUserId}/>} />

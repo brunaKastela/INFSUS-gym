@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Profile.css";
+import { useNavigate } from 'react-router-dom';
 
-const ProfilePage = ({ userId }) => {
+const ProfilePage = ({ userId, setIsLoggedIn }) => {
   const [profile, setProfile] = useState({
     name: "",
     surname: "",
@@ -15,22 +16,26 @@ const ProfilePage = ({ userId }) => {
   });
   const [initialProfile, setInitialProfile] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const navigate = useNavigate();
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        `https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`
+      );
+      setProfile(response.data);
+      setInitialProfile(response.data);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(
-          `https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`
-        );
-        setProfile(response.data);
-        setInitialProfile(response.data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchProfile();
-  }, [userId]);
+    if (!isDeleted) {
+      fetchProfile();
+    }
+  }, [userId, isDeleted]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +47,19 @@ const ProfilePage = ({ userId }) => {
 
   const handleEdit = () => {
     setIsEditing(true);
+  };
+
+  const handleDelete = async () => {
+    try {      
+      await axios.delete(
+        `https://infsus-project-gym.fly.dev/gym/account/deleteAccount/${profile.id}`
+      );      
+      setIsLoggedIn(false);
+      setIsDeleted(true);
+      navigate('/');
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -56,6 +74,7 @@ const ProfilePage = ({ userId }) => {
         id: profile.id,
         name: profile.name,
         surname: profile.surname,
+        phoneNumber: profile.phoneNumber,
         email: profile.email,
       };
       await axios.put(
@@ -63,6 +82,7 @@ const ProfilePage = ({ userId }) => {
         updatedProfile
       );
       setIsEditing(false);
+      fetchProfile();
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -138,8 +158,11 @@ const ProfilePage = ({ userId }) => {
         ) : (
           <button className="edit-btn" onClick={handleEdit}>
             Uredi
-          </button>
+          </button>          
         )}
+        {!isEditing && <button className="edit-btn" onClick={handleDelete}>
+            Obriši
+          </button>}
       </form>
     </div>
   );
