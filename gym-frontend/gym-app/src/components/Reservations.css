@@ -1,61 +1,75 @@
-.reservations-page {
-    max-width: 600px;
+.reservations-container {
+    max-width: 90%;
     margin: 0 auto;
     padding: 20px;
+}
+
+.reservation-item {
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f9f9f9;
-    margin-top: 20px;
-}
-
-.reservations-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.reservations-list p {
-    font-size: 23px;
-}
-
-.reservations-list li {
-    margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-}
-
-.add-reservation-form {
-    margin-top: 20px;
-}
-
-.add-reservation-form label {
-    display: block;
     margin-bottom: 10px;
 }
 
-.add-reservation-form select {
-    padding: 8px;
-    margin-top: 5px;
+.locations-title {
+    font-size: 24px;
+    font-weight: bold;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    display: block;
-    width: 100%;
 }
 
-/* .add-reservation-form button[type='submit'] {
-    background-color: #4caf50;
-    color: white;
+.locations-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 15px;
+}
+
+.locations-list p {
+    font-size: 13px;
+}
+
+.location-item {
+    width: 45%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+  
+  .reservations-title {
+    font-size: 24px;
+    margin-bottom: 10px;
   }
   
-  .add-reservation-form button[type='button'] {
-    background-color: #f44336;
+  .reservations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .reservations-table th,
+  .reservations-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .reservations-table th {
+    background-color: #e59560;
     color: white;
-    margin-top: 5px;
-  } */
-
-.res-btns {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 20px;
+  }
+  
+  .reservation-row:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .delete-button, .reserve-button, .select-button {
     padding: 8px 12px;
     background-color: #1d3124;
     color: white;
@@ -64,9 +78,17 @@
     border-radius: 4px;
     transition: background-color 0.3s ease;
     margin: 2px;
-    width: 150px;
-}
+    width: 100px;
+    font-size: 20px;
+  }
 
-.res-btn {
-    width: 250px;
-}
+  .reserve-button, .select-button {
+    width: 200px;
+    margin-top: 10px;
+  }
+  
+  .delete-button:hover, .select-button:hover, .reserve-button:hover {
+    background-color: #668080;
+    /* #d32f2f; #388e3c*/
+  }
+  

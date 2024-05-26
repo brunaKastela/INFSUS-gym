@@ -1,140 +1,155 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Reservations.css';
+import './Reservations.css'
 
-const ReservationsPage = ({userId}) => {
-//   const [reservations, setReservations] = useState([]);
-//   const [timeslots, setTimeslots] = useState([]);
-  const [selectedTimeslot, setSelectedTimeslot] = useState('');
-  const [isAdding, setIsAdding] = useState(false);
+const ReservationsPage = ({ userId }) => {
+  const [reservations, setReservations] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [timeslots, setTimeslots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedTimeSlot, setselectedTimeSlot] = useState(null);
 
-  const dummyReservations = [
-    {
-      reservationId: 'EBD36E37-5E19-4FC7-9D84-E638815551F8',
-      location: {
-        address: 'Heinzlova 47',
-        description: 'Modern gym space',
-        closing: 19,
-        opening: 11,
-        phoneNumber: '0996578393',
-        email: 'infoHeinzlovaGym@gmail.com',
-        capacity: 50
-      },
-      timeslot: {
-        id: 'E8E728B4-54FC-446D-B19E-73D0162082D6',
-        startTime: '2024-05-29T10:00:00Z',
-        endTime: '2024-05-29T11:00:00Z'
-      }
+  const fetchReservations = async () => {
+    try {
+      const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/reservations/${userId}`);
+      setReservations(response.data);
+    } catch (error) {
+      console.error('Error fetching reservations:', error);
     }
-  ];
-
-  // Dummy data for new reservation timeslots
-  const dummyTimeslots = [
-    {
-      id: '1',
-      startTime: '2024-06-01T10:00:00Z',
-      endTime: '2024-06-01T11:00:00Z'
-    },
-    {
-      id: '2',
-      startTime: '2024-06-01T11:00:00Z',
-      endTime: '2024-06-01T12:00:00Z'
-    }
-  ];
-
-  
-  const [reservations, setReservations] = useState(dummyReservations);
-  const [timeslots, setTimeslots] = useState(dummyTimeslots);
-
-//   useEffect(() => {
-//     // Fetch existing reservations
-//     const fetchReservations = async () => {
-//       try {
-//         const response = await axios.get(`http://127.0.0.1:8080/gym/locations/reservations/${userId}`);
-//         setReservations(response.data);
-//       } catch (error) {
-//         console.error('Error fetching reservations:', error);
-//       }
-//     };
-
-//     // Fetch available timeslots
-//     const fetchTimeslots = async () => {
-//       try {
-//         const response = await axios.get('http://127.0.0.1:8080/gym/locations/DC76CD32-19FB-4ABF-A21F-26829F25ADAC/2024-05-28T00:00:00Z');
-//         setTimeslots(response.data);
-//       } catch (error) {
-//         console.error('Error fetching timeslots:', error);
-//       }
-//     };
-
-//     fetchReservations();
-//     fetchTimeslots();
-//   }, []);
-
-  const handleAddReservation = () => {
-    setIsAdding(true);
   };
 
-  const handleTimeslotChange = (e) => {
-    setSelectedTimeslot(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (selectedTimeslot) {
-      const newReservation = {
-        userId,
-        timeslotId: selectedTimeslot
-      };
-
+  useEffect(() => {
+    const fetchLocations = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8080/gym/reservations', newReservation);
-        setReservations([...reservations, response.data]);
-        setIsAdding(false);
-        setSelectedTimeslot('');
+        const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/locations`);
+        setLocations(response.data);
       } catch (error) {
-        console.error('Error creating reservation:', error);
+        console.error('Error fetching locations:', error);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    fetchReservations();
+    fetchLocations();
+  }, [userId]);
+
+  const handleSelectLocation = async (locationId) => {
+    setSelectedLocation(locationId);
+    setShowDatePicker(true);
+  };
+
+  const handleDeleteReservation = async (reservationId) => {
+    try {
+      await axios.delete(`https://infsus-project-gym.fly.dev/gym/reservations/${reservationId}`);
+      setReservations(reservations.filter((reservation) => reservation.reservationId !== reservationId));
+    } catch (error) {
+      console.error('Error deleting reservation:', error);
+    }
+  }
+
+  const handleDateChange = async (event) => {
+    var selectedDate = event.target.value + 'T00:00:00Z';
+    setSelectedDate(selectedDate);
+
+    try {
+      const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/locations/${selectedLocation}/${selectedDate}`);
+      setTimeslots(response.data);
+    } catch (error) {
+      console.error('Error fetching timeslots:', error);
     }
   };
 
-  const handleCancel = () => {
-    setIsAdding(false);
-    setSelectedTimeslot('');
+  const handleSelectTimeslot = async (timeslotId) => {
+    setselectedTimeSlot(timeslotId);
   };
+
+  const makeReservation = async () => {
+    try {
+      await axios.post('https://infsus-project-gym.fly.dev/gym/reservations', {
+        userId: userId,
+        timeslotLocationId: selectedTimeSlot
+      });
+      setSelectedDate(null);
+      setShowDatePicker(false);
+      fetchReservations();
+    } catch (error) {
+      console.error('Error making reservation:', error);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
-    <div className="reservations-page">
-      <h1>Rezervirani termini</h1>
-      <ul className="reservations-list">
-        {reservations.map((reservation) => (
-          <li key={reservation.reservationId}>
-            <h2>{reservation.location.address}</h2>
-            <p>{reservation.location.description}</p>
-            <p>
-              {new Date(reservation.timeslot.startTime).toLocaleString()} -{' '}
-              {new Date(reservation.timeslot.endTime).toLocaleString()}
-            </p>
+    <div className="reservations-container">
+      <h1 className="reservations-title">Rezervacije</h1>
+      {reservations.length === 0 ? (
+  <p>Nema pronađenih rezervacija.</p>
+) : (
+  <table className="reservations-table">
+        <thead>
+          <tr>
+            <th>Lokacija</th>
+            <th>Početak termina</th>
+            <th>Kraj termina</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {reservations.map((reservation) => (
+            <tr key={reservation.reservationId} className="reservation-row">
+              <td>{reservation.timeslot.location.address}</td>
+              <td>{new Date(reservation.timeslot.timeslot.startTime).toLocaleString()}</td>
+              <td>{new Date(reservation.timeslot.timeslot.endTime).toLocaleString()}</td>
+              <td>
+                <button className="delete-button" onClick={() => handleDeleteReservation(reservation.reservationId)}>Obriši</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+)}
+
+<h1 className="locations-title">Lokacije</h1>
+      <ul className="locations-list">
+        {locations.map((location) => (
+          <li key={location.id} className="location-item">
+            <h2>{location.address}</h2>
+            <p>{location.description}</p>
+            <p>Radno vrijeme: {location.opening}-{location.closing}</p>
+            <p>Broj telefona: {location.phoneNumber}</p>
+            <p>{location.email}</p>
+            <p>Kapacitet: {location.capacity}</p>
+            <button className="select-button" onClick={() => handleSelectLocation(location.id)}>Odaberi vrijeme</button>
           </li>
         ))}
       </ul>
-      <button className='res-btns res-btn' onClick={handleAddReservation}>Rezervirajte novi termin</button>
-      {isAdding && (
-        <form onSubmit={handleSubmit} className="add-reservation-form">
-          <label>
-            Odaberite termin:
-            <select value={selectedTimeslot} onChange={handleTimeslotChange}>
-              <option value="">--Odaberite termin--</option>
-              {timeslots.map((slot) => (
-                <option key={slot.id} value={slot.id}>
-                  {new Date(slot.startTime).toLocaleString()} - {new Date(slot.endTime).toLocaleString()}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className='res-btns' type="submit">Spremi</button>
-          <button className='res-btns' type="button" onClick={handleCancel}>Odustani</button>
-        </form>
+
+      {showDatePicker && (
+        <div className="date-picker">
+          <label htmlFor="date">Odaberite datum: </label>
+          <input type="date" id="date" onChange={handleDateChange} />
+        </div>
+      )}
+
+    {selectedDate && (
+        <div>
+          <h3>Dostupni termini</h3>
+          <select onChange={(e) => handleSelectTimeslot(e.target.value)}>
+            <option value="">Odaberite termin</option>
+            {timeslots.map((timeslot) => (
+              <option key={timeslot.id} value={timeslot.id}>
+                {new Date(timeslot.timeslot.startTime).toLocaleString()} - {new Date(timeslot.timeslot.endTime).toLocaleString()}
+              </option>
+            ))}
+          </select>
+          <button className="reserve-button" onClick={() => makeReservation()} disabled={selectedTimeSlot == null || selectedTimeSlot === ''}>Rezerviraj termin</button>
+        </div>
       )}
     </div>
   );
