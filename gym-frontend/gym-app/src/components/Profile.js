@@ -3,7 +3,6 @@ import axios from 'axios';
 import './Profile.css';
 
 const ProfilePage = ({userId}) => {
-  console.log(userId)
   const [profile, setProfile] = useState({
     name: '',
     surname: '',
@@ -11,8 +10,10 @@ const ProfilePage = ({userId}) => {
     dateOfBirth: '',
     email: '',
     userTypeId: '',
-    userTypeName: ''
+    userTypeName: '',
+    id: userId
   });
+  const [initialProfile, setInitialProfile] = useState({});
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const ProfilePage = ({userId}) => {
       try {
         const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`);
         setProfile(response.data);
+        setInitialProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
       }
@@ -27,19 +29,6 @@ const ProfilePage = ({userId}) => {
 
     fetchProfile();
   }, [userId]);
-
-    // const dummyProfile = {
-    //     name: 'Mia',
-    //     surname: 'Lovric',
-    //     phoneNumber: '0996571382',
-    //     dateOfBirth: '2004-05-25',
-    //     email: 'mia@example.com',
-    //     userTypeId: '26519AEA-35B9-49A3-8E56-FCBB370E617D',
-    //     userTypeName: 'employee'
-    // };
-
-    // const [profile, setProfile] = useState(dummyProfile);
-    // const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,13 +43,22 @@ const ProfilePage = ({userId}) => {
   };
 
   const handleCancel = () => {
+    setProfile(initialProfile);
     setIsEditing(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://127.0.0.1:8080/gym/admin/users/${userId}`, profile);
+      const updatedProfile = {
+        id: profile.id,
+        name: profile.name,
+        surname: profile.surname,
+        email: profile.email
+        // dateOfBirth: new Date(profile.dateOfBirth).toISOString()
+      };
+      console.log(updatedProfile)
+      await axios.put(`https://infsus-project-gym.fly.dev/gym/admin/users`, updatedProfile);
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -108,7 +106,7 @@ const ProfilePage = ({userId}) => {
             name="dateOfBirth"
             value={profile.dateOfBirth.split('T')[0]}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={true}
           />
         </label>
         <label>
@@ -123,8 +121,8 @@ const ProfilePage = ({userId}) => {
         </label>
         {isEditing ? (
           <>
-            <button type="submit">Spremi</button>
-            <button type="button" onClick={handleCancel}>
+            <button className='edit-btn submit-btn' type="submit">Spremi</button>
+            <button className='edit-btn cancel-btn' type="button" onClick={handleCancel}>
               Odustani
             </button>
           </>

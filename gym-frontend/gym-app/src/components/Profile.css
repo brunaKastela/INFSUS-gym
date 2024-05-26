@@ -35,7 +35,7 @@
     cursor: pointer;
   }
   
-  .profile-form button[type='submit'] {
+  /* .profile-form button[type='submit'] {
     background-color: #4caf50;
     color: white;
   }
@@ -43,7 +43,7 @@
   .profile-form button[type='button'] {
     background-color: #f44336;
     color: white;
-  }
+  } */
 
   .edit-btn {
     padding: 8px 12px;
@@ -57,3 +57,7 @@
     width: 100px;
   }
   
+  .submit-btn, .cancel-btn{
+    width: 150px;
+    margin-top: 5px;
+  }
