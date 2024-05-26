@@ -1,0 +1,59 @@
+.profile-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+  }
+  
+  h1 {    
+    color: #e59560;
+  }
+
+  .profile-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #e59560;
+  }
+  
+  .profile-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .profile-form button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .profile-form button[type='submit'] {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .profile-form button[type='button'] {
+    background-color: #f44336;
+    color: white;
+  }
+
+  .edit-btn {
+    padding: 8px 12px;
+    background-color: #1d3124;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    margin: 2px;
+    width: 100px;
+  }
+  
