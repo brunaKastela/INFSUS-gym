@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Profile.css";
 
-const ProfilePage = ({userId}) => {
+const ProfilePage = ({ userId }) => {
   const [profile, setProfile] = useState({
-    name: '',
-    surname: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    email: '',
-    userTypeId: '',
-    userTypeName: '',
-    id: userId
+    name: "",
+    surname: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    email: "",
+    userTypeId: "",
+    userTypeName: "",
+    id: userId,
   });
   const [initialProfile, setInitialProfile] = useState({});
   const [isEditing, setIsEditing] = useState(false);
@@ -19,11 +19,13 @@ const ProfilePage = ({userId}) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`);
+        const response = await axios.get(
+          `https://infsus-project-gym.fly.dev/gym/admin/users/${userId}`
+        );
         setProfile(response.data);
         setInitialProfile(response.data);
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error("Error fetching profile:", error);
       }
     };
 
@@ -54,14 +56,15 @@ const ProfilePage = ({userId}) => {
         id: profile.id,
         name: profile.name,
         surname: profile.surname,
-        email: profile.email
-        // dateOfBirth: new Date(profile.dateOfBirth).toISOString()
+        email: profile.email,
       };
-      console.log(updatedProfile)
-      await axios.put(`https://infsus-project-gym.fly.dev/gym/admin/users`, updatedProfile);
+      await axios.put(
+        `https://infsus-project-gym.fly.dev/gym/admin/users`,
+        updatedProfile
+      );
       setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
   };
 
@@ -104,7 +107,7 @@ const ProfilePage = ({userId}) => {
           <input
             type="date"
             name="dateOfBirth"
-            value={profile.dateOfBirth.split('T')[0]}
+            value={profile.dateOfBirth.split("T")[0]}
             onChange={handleChange}
             disabled={true}
           />
@@ -121,13 +124,19 @@ const ProfilePage = ({userId}) => {
         </label>
         {isEditing ? (
           <>
-            <button className='edit-btn submit-btn' type="submit">Spremi</button>
-            <button className='edit-btn cancel-btn' type="button" onClick={handleCancel}>
+            <button className="edit-btn submit-btn" type="submit">
+              Spremi
+            </button>
+            <button
+              className="edit-btn cancel-btn"
+              type="button"
+              onClick={handleCancel}
+            >
               Odustani
             </button>
           </>
         ) : (
-          <button className='edit-btn' onClick={handleEdit}>
+          <button className="edit-btn" onClick={handleEdit}>
             Uredi
           </button>
         )}

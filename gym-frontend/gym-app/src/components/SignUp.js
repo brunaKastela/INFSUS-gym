@@ -17,15 +17,6 @@ const SignupPage = ({ setIsLoggedIn, setUserRole, setUserId }) => {
     const isoDate = date.toISOString();
     e.preventDefault(); 
     try {
-      console.log({
-        name,
-        surname,
-        email,
-        phoneNumber,
-        dateOfBirth: isoDate,
-        password,
-        userTypeId: '71BEAC26-4426-4620-9F74-DA6DCA89D792' 
-      })
       const response = await axios.post('https://infsus-project-gym.fly.dev/gym/account/createAccount', {
         name,
         surname,

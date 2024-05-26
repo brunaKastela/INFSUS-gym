@@ -10,7 +10,7 @@
     align-items: center;
 }
 
-.memberships-page h1 {
+.memberships-page h1, .memberships-page h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #e59560;
@@ -98,4 +98,30 @@ button:hover .add-new-btn:hover  {
 
   .cancel-btn {
     width: 140px;
+  }
+
+  .subscriptions-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .subscriptions-table th,
+  .subscriptions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .subscriptions-table th {
+    background-color: #e59560;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .subscriptions-table tr:hover {
+    background-color: #f5f5f5;
   }
